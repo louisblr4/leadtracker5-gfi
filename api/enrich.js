@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { nom, spe, soc, linkedin } = req.body;
+  const { nom, spe, soc, linkedin, mode } = req.body;
   if (!nom) return res.status(400).json({ error: 'Nom requis' });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -13,25 +13,41 @@ export default async function handler(req, res) {
 
   const liInfo = linkedin ? `\n- LinkedIn : ${linkedin}` : '';
 
-  const prompt = `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e (prévoyance sur-obligatoire).
+  const prompt = mode === 'prospects'
+    ? `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e (prévoyance sur-obligatoire).
 
-Recherche des connexions professionnelles probables pour ce profil via LinkedIn, publications, annuaires professionnels, et retourne UNIQUEMENT un tableau JSON (sans markdown, sans backticks) avec 4 à 6 connexions réelles ou probables.
+Ce contact connaît probablement des médecins ou professionnels de santé genevois qui pourraient être intéressés par un plan LPP sur-obligatoire.
 
-Chaque connexion doit avoir :
+Recherche sur LinkedIn et le web les profils que cette personne pourrait introduire, et retourne UNIQUEMENT un tableau JSON (sans markdown, sans backticks) avec 3 à 5 prospects potentiels.
+
+Chaque prospect doit avoir :
 - nom : nom complet
 - role : poste et institution
-- type_lien : "Connexion LinkedIn", "Co-auteur", "Même promo", "Même institution", "Association professionnelle", "Confrère spécialité" ou autre
-- force : "fort" | "moyen" | "faible"
-- senio : "partner" | "senior" | "junior"
-- raison : une phrase concrète expliquant le lien probable
+- spe : spécialité médicale ou secteur
+- soc : cabinet ou clinique
+- linkedin : URL LinkedIn si trouvable, sinon null
+- force : "fort" | "moyen" | "faible" (force probable de l'introduction)
+- raison : une phrase expliquant pourquoi ce contact peut introduire cette personne
 
-Profil cible :
+Contact connu :
 - Nom : ${nom}
-- Spécialité / Secteur : ${spe || 'Non précisé'}
-- Cabinet / Société : ${soc || 'Non précisé'}
+- Rôle : ${spe || 'Non précisé'}
 - Localisation : Genève, Suisse${liInfo}
 
-Utilise le web search pour trouver des informations réelles sur cette personne — LinkedIn, publications, site de l'institution, annuaires. Retourne uniquement le tableau JSON.`;
+Retourne uniquement le tableau JSON.`
+    : `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e.
+
+Recherche des connexions professionnelles probables pour ce profil et retourne UNIQUEMENT un tableau JSON (sans markdown, sans backticks) avec 4 à 6 connexions.
+
+Chaque connexion : nom, role, type_lien, force ("fort"|"moyen"|"faible"), senio ("partner"|"senior"|"junior"), raison.
+
+Profil :
+- Nom : ${nom}
+- Spécialité : ${spe || 'Non précisé'}
+- Cabinet : ${soc || 'Non précisé'}
+- Canton : Genève${liInfo}
+
+Retourne uniquement le tableau JSON.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -52,11 +68,7 @@ Utilise le web search pour trouver des informations réelles sur cette personne 
     const data = await response.json();
     if (data.error) return res.status(500).json({ error: data.error.message });
 
-    const fullText = data.content
-      .map(i => (i.type === 'text' ? i.text : ''))
-      .filter(Boolean)
-      .join('\n');
-
+    const fullText = data.content.map(i => (i.type === 'text' ? i.text : '')).filter(Boolean).join('\n');
     const clean = fullText.replace(/```json|```/g, '').trim();
     const arrMatch = clean.match(/\[[\s\S]*\]/);
     if (!arrMatch) return res.status(500).json({ error: 'Réponse invalide de l\'IA' });
