@@ -9,45 +9,42 @@ export default async function handler(req, res) {
   if (!nom) return res.status(400).json({ error: 'Nom requis' });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Clé API non configurée sur le serveur' });
+  if (!apiKey) return res.status(500).json({ error: 'Clé API non configurée' });
 
   const liInfo = linkedin ? `\n- LinkedIn : ${linkedin}` : '';
 
   const prompt = mode === 'prospects'
-    ? `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e (prévoyance sur-obligatoire).
+    ? `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e.
 
-Ce contact connaît probablement des médecins ou professionnels de santé genevois qui pourraient être intéressés par un plan LPP sur-obligatoire.
+Recherche sur LinkedIn et le web les profils médicaux genevois que cette personne pourrait introduire.
 
-Recherche sur LinkedIn et le web les profils que cette personne pourrait introduire, et retourne UNIQUEMENT un tableau JSON (sans markdown, sans backticks) avec 3 à 5 prospects potentiels.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans aucun texte avant ou après, sans balises markdown, sans backticks. Juste le tableau JSON brut.
 
-Chaque prospect doit avoir :
-- nom : nom complet
-- role : poste et institution
-- spe : spécialité médicale ou secteur
-- soc : cabinet ou clinique
-- linkedin : URL LinkedIn si trouvable, sinon null
-- force : "fort" | "moyen" | "faible" (force probable de l'introduction)
-- raison : une phrase expliquant pourquoi ce contact peut introduire cette personne
+Format exact attendu:
+[{"nom":"Exemple","role":"Médecin","spe":"Cardiologie","soc":"HUG","linkedin":null,"force":"moyen","raison":"Explication"}]
 
-Contact connu :
-- Nom : ${nom}
-- Rôle : ${spe || 'Non précisé'}
-- Localisation : Genève, Suisse${liInfo}
+3 à 5 entrées maximum.
 
-Retourne uniquement le tableau JSON.`
+Contact:
+- Nom: ${nom}
+- Rôle: ${spe || 'Non précisé'}
+- Localisation: Genève${liInfo}`
     : `Tu es un expert en prospection pour un GFI genevois spécialisé plan 1e.
 
-Recherche des connexions professionnelles probables pour ce profil et retourne UNIQUEMENT un tableau JSON (sans markdown, sans backticks) avec 4 à 6 connexions.
+Recherche des connexions professionnelles probables pour ce profil médical genevois.
 
-Chaque connexion : nom, role, type_lien, force ("fort"|"moyen"|"faible"), senio ("partner"|"senior"|"junior"), raison.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans aucun texte avant ou après, sans balises markdown, sans backticks. Juste le tableau JSON brut.
 
-Profil :
-- Nom : ${nom}
-- Spécialité : ${spe || 'Non précisé'}
-- Cabinet : ${soc || 'Non précisé'}
-- Canton : Genève${liInfo}
+Format exact attendu:
+[{"nom":"Exemple","role":"Poste","type_lien":"Connexion LinkedIn","force":"moyen","senio":"senior","raison":"Explication"}]
 
-Retourne uniquement le tableau JSON.`;
+3 à 5 entrées maximum.
+
+Profil:
+- Nom: ${nom}
+- Spécialité: ${spe || 'Non précisé'}
+- Cabinet: ${soc || 'Non précisé'}
+- Canton: Genève${liInfo}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -68,12 +65,43 @@ Retourne uniquement le tableau JSON.`;
     const data = await response.json();
     if (data.error) return res.status(500).json({ error: data.error.message });
 
-    const fullText = data.content.map(i => (i.type === 'text' ? i.text : '')).filter(Boolean).join('\n');
-    const clean = fullText.replace(/```json|```/g, '').trim();
-    const arrMatch = clean.match(/\[[\s\S]*\]/);
-    if (!arrMatch) return res.status(500).json({ error: 'Réponse invalide de l\'IA' });
+    // Assemble all text blocks
+    const fullText = data.content
+      .filter(i => i.type === 'text')
+      .map(i => i.text)
+      .join('\n')
+      .trim();
 
-    const connexions = JSON.parse(arrMatch[0]);
+    // Try multiple extraction strategies
+    let connexions = null;
+
+    // Strategy 1: direct parse
+    try { connexions = JSON.parse(fullText); } catch(e) {}
+
+    // Strategy 2: extract array with regex
+    if (!connexions) {
+      const match = fullText.match(/\[[\s\S]*\]/);
+      if (match) {
+        try { connexions = JSON.parse(match[0]); } catch(e) {}
+      }
+    }
+
+    // Strategy 3: strip markdown and retry
+    if (!connexions) {
+      const clean = fullText.replace(/```json/g, '').replace(/```/g, '').trim();
+      try { connexions = JSON.parse(clean); } catch(e) {}
+      if (!connexions) {
+        const match2 = clean.match(/\[[\s\S]*\]/);
+        if (match2) {
+          try { connexions = JSON.parse(match2[0]); } catch(e) {}
+        }
+      }
+    }
+
+    if (!connexions || !Array.isArray(connexions)) {
+      return res.status(500).json({ error: 'Réponse invalide de l\'IA', raw: fullText.slice(0, 200) });
+    }
+
     return res.status(200).json({ connexions });
   } catch (err) {
     return res.status(500).json({ error: err.message || 'Erreur serveur' });
