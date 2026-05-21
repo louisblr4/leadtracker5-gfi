@@ -18,14 +18,31 @@
 html,body{min-height:100%;background:var(--bg);color:var(--w);font-family:var(--sans);font-size:14px}
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);z-index:100}
 
+#global-loading{position:fixed;inset:0;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.25s}
+#global-loading.show{opacity:1;pointer-events:all}
+.gl-spinner{width:44px;height:44px;border:2px solid rgba(201,169,110,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:22px}
+.gl-title{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--w);margin-bottom:8px}
+.gl-title em{color:var(--gold);font-style:italic}
+.gl-step{font-size:11px;color:var(--w3);letter-spacing:0.12em;text-transform:uppercase;min-height:18px}
+.gl-dots{display:flex;gap:7px;margin-top:22px}
+.gl-dot{width:5px;height:5px;border-radius:50%;background:var(--w3);animation:dotpulse 1.4s ease-in-out infinite}
+.gl-dot:nth-child(2){animation-delay:0.2s}.gl-dot:nth-child(3){animation-delay:0.4s}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes dotpulse{0%,80%,100%{background:var(--w3);transform:scale(1)}40%{background:var(--gold);transform:scale(1.5)}}
+
 header{border-bottom:0.5px solid var(--gold-line);padding:16px 28px 13px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);position:sticky;top:0;z-index:50}
 .h-title{font-family:var(--serif);font-size:22px;font-weight:300}
 .h-title em{color:var(--gold);font-style:italic}
 .h-sub{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--w3);margin-top:2px}
-.h-right{display:flex;align-items:center;gap:12px}
+.h-counts{display:flex;gap:10px}
 .h-tag{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 10px;border-radius:2px}
-.tag-cible{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-line)}
-.tag-relais{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-line)}
+.tag-contact{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-line)}
+.tag-prospect{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-line)}
+
+.tabs{display:flex;background:var(--bg2);border-bottom:0.5px solid var(--gold-line)}
+.tab{flex:1;padding:11px;text-align:center;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--w3);cursor:pointer;border-bottom:1.5px solid transparent;transition:all 0.15s}
+.tab:hover{color:var(--w2)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
 .toolbar{padding:10px 28px;display:flex;gap:8px;align-items:center;background:var(--bg2);border-bottom:0.5px solid var(--gold-line);flex-wrap:wrap}
 .tb-input{background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--w);font-family:var(--sans);font-size:12px;padding:6px 11px;outline:none;transition:border-color 0.2s}
@@ -37,80 +54,57 @@ select.tb-input{cursor:pointer;appearance:none;background-image:url("data:image/
 .btn-primary:hover{background:rgba(201,169,110,0.22)}
 
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:700px}
+table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:600px}
 thead tr{background:var(--bg3);border-bottom:0.5px solid var(--gold-line)}
 thead th{font-size:9px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--w3);padding:10px 14px;text-align:left;user-select:none;cursor:pointer;transition:color 0.15s;white-space:nowrap}
 thead th:hover{color:var(--gold2)}
 thead th.sort-active{color:var(--gold)}
 .sort-arrow{margin-left:3px;font-size:8px}
-thead th:nth-child(1){width:13%}thead th:nth-child(2){width:19%}thead th:nth-child(3){width:17%}
-thead th:nth-child(4){width:13%}thead th:nth-child(5){width:10%}thead th:nth-child(6){width:17%}thead th:nth-child(7){width:11%}
 tbody tr{border-bottom:0.5px solid rgba(201,169,110,0.08);transition:background 0.12s;cursor:pointer}
 tbody tr:hover{background:var(--gold-dim)}
 tbody td{padding:10px 14px;font-size:12px;color:var(--w2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-tbody td:nth-child(2){color:var(--w);font-weight:500}
+tbody td:first-child{color:var(--w);font-weight:500}
 
 .badge{display:inline-block;font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:2px 9px;border-radius:2px}
-.b-cible{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-line)}
-.b-relais{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-line)}
 .st-new{background:rgba(55,138,221,0.08);color:#85b7eb;border:0.5px solid rgba(55,138,221,0.28)}
 .st-contacted{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-line)}
 .st-qualified{background:var(--teal-bg);color:var(--teal);border:0.5px solid var(--teal-line)}
 .st-proposal{background:var(--purple-bg);color:var(--purple);border:0.5px solid var(--purple-line)}
 .st-won{background:rgba(90,158,110,0.10);color:#6ec98a;border:0.5px solid rgba(90,158,110,0.28)}
 .st-lost{background:var(--red-bg);color:#e08080;border:0.5px solid var(--red-line)}
+.lien-fort{background:rgba(201,169,110,0.15);color:var(--gold2);border:0.5px solid var(--gold-line)}
+.lien-moyen{background:var(--bg4);color:var(--w2);border:0.5px solid rgba(255,255,255,0.1)}
+.lien-faible{background:var(--bg4);color:var(--w3);border:0.5px solid rgba(255,255,255,0.06)}
 .proba-bar{display:flex;align-items:center;gap:6px}
 .proba-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
 .proba-fill{height:100%;border-radius:2px}
 .proba-txt{font-size:10px;font-weight:500;min-width:30px;text-align:right}
-.li-btn{display:inline-flex;align-items:center;gap:4px;background:rgba(10,102,194,0.12);border:0.5px solid rgba(10,102,194,0.3);border-radius:2px;color:#5b9fd4;font-family:var(--sans);font-size:9px;font-weight:500;padding:2px 8px;cursor:pointer;text-decoration:none;text-transform:uppercase}
+.li-btn{display:inline-flex;align-items:center;gap:4px;background:rgba(10,102,194,0.12);border:0.5px solid rgba(10,102,194,0.3);border-radius:2px;color:#5b9fd4;font-family:var(--sans);font-size:9px;font-weight:500;padding:2px 7px;cursor:pointer;text-decoration:none;text-transform:uppercase}
 .li-btn:hover{background:rgba(10,102,194,0.22)}
-.ai-badge{display:inline-flex;align-items:center;gap:3px;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);background:var(--teal-bg);border:0.5px solid var(--teal-line);border-radius:2px;padding:1px 6px}
 .empty{text-align:center;padding:60px 20px;color:var(--w3);font-size:12px}
-
-/* GLOBAL LOADING */
-#global-loading{position:fixed;inset:0;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.25s}
-#global-loading.show{opacity:1;pointer-events:all}
-.gl-spinner{width:44px;height:44px;border:2px solid rgba(201,169,110,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:22px}
-.gl-title{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--w);margin-bottom:8px}
-.gl-title em{color:var(--gold);font-style:italic}
-.gl-step{font-size:11px;color:var(--w3);letter-spacing:0.12em;text-transform:uppercase;min-height:18px}
-.gl-dots{display:flex;gap:7px;margin-top:22px}
-.gl-dot{width:5px;height:5px;border-radius:50%;background:var(--w3);animation:dotpulse 1.4s ease-in-out infinite}
-.gl-dot:nth-child(2){animation-delay:0.2s}
-.gl-dot:nth-child(3){animation-delay:0.4s}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes dotpulse{0%,80%,100%{background:var(--w3);transform:scale(1)}40%{background:var(--gold);transform:scale(1.5)}}
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .overlay.open{opacity:1;pointer-events:all}
-.fiche{background:var(--bg2);border:0.5px solid var(--gold-line);border-radius:4px;width:720px;max-width:96vw;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column}
+.fiche{background:var(--bg2);border:0.5px solid var(--gold-line);border-radius:4px;width:700px;max-width:96vw;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column}
 .fiche-top{padding:20px 24px 14px;border-bottom:0.5px solid var(--gold-line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:sticky;top:0;background:var(--bg2);z-index:10}
 .fiche-name{font-family:var(--serif);font-size:21px;font-weight:300}
 .fiche-sub{font-size:11px;color:var(--w3);margin-top:3px}
 .fiche-top-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
 .icon-btn{background:none;border:0.5px solid rgba(255,255,255,0.1);border-radius:3px;color:var(--w3);font-family:var(--sans);font-size:10px;letter-spacing:0.1em;padding:5px 13px;cursor:pointer;text-transform:uppercase;transition:all 0.15s;white-space:nowrap}
 .icon-btn:hover{color:var(--w);border-color:var(--gold-line)}
-.close-x{background:none;border:none;color:var(--w3);cursor:pointer;font-size:18px;line-height:1;padding:2px;transition:color 0.15s}
+.close-x{background:none;border:none;color:var(--w3);cursor:pointer;font-size:18px;line-height:1;padding:2px}
 .close-x:hover{color:var(--w)}
 
 .section-block{padding:16px 24px;border-bottom:0.5px solid var(--gold-line)}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .section-title{font-size:9px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
-.arbre-filters{display:flex;gap:6px}
-.filter-btn{background:var(--bg4);border:0.5px solid rgba(255,255,255,0.08);border-radius:2px;color:var(--w3);font-family:var(--sans);font-size:9px;font-weight:500;letter-spacing:0.1em;padding:3px 10px;cursor:pointer;text-transform:uppercase;transition:all 0.15s}
-.filter-btn.active-all{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
-.filter-btn.active-pro{background:var(--teal-bg);border-color:var(--teal-line);color:var(--teal)}
-.filter-btn.active-perso{background:var(--purple-bg);border-color:var(--purple-line);color:var(--purple)}
-#arbre-svg-wrap{position:relative;width:100%}
-#arbre-svg{width:100%;display:block}
-.node-tooltip{position:absolute;background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;padding:11px 14px;font-size:11px;pointer-events:none;z-index:20;min-width:190px;max-width:240px;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+
+#arbre-contact-wrap,#arbre-prospect-wrap{position:relative;width:100%}
+.arbre-svg{width:100%;display:block}
+.node-tooltip{position:absolute;background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;padding:10px 13px;font-size:11px;pointer-events:none;z-index:20;min-width:180px;max-width:220px;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .nt-name{font-weight:500;color:var(--w);margin-bottom:2px;font-size:12px}
 .nt-role{color:var(--w3);font-size:10px;margin-bottom:5px}
-.nt-link-type{font-size:9px;letter-spacing:0.1em;margin-bottom:5px}
-.nt-proba{font-size:10px;color:var(--gold);margin-bottom:7px}
-.nt-btn{width:100%;background:var(--gold-dim);border:0.5px solid var(--gold-line);border-radius:2px;color:var(--gold2);font-family:var(--sans);font-size:9px;font-weight:500;letter-spacing:0.1em;padding:5px;cursor:pointer;text-transform:uppercase;pointer-events:all;transition:background 0.15s;display:block}
-.nt-btn:hover{background:rgba(201,169,110,0.24)}
+.nt-meta{font-size:10px;color:var(--gold)}
 
 .btn-enrich{background:var(--gold-dim);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--gold2);font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.1em;padding:6px 16px;cursor:pointer;text-transform:uppercase;transition:background 0.15s;display:flex;align-items:center;gap:6px}
 .btn-enrich:hover{background:rgba(201,169,110,0.22)}
@@ -122,24 +116,23 @@ tbody td:nth-child(2){color:var(--w);font-weight:500}
 .elc-role{font-size:10px;color:var(--w3);margin-bottom:4px}
 .elc-meta{font-size:9px;color:var(--teal);letter-spacing:0.06em}
 .elc-raison{font-size:10px;color:var(--w2);margin-top:5px;font-style:italic;line-height:1.5}
-.btn-add-enriched{background:var(--teal-bg);border:0.5px solid var(--teal-line);border-radius:2px;color:var(--teal);font-family:var(--sans);font-size:9px;font-weight:500;letter-spacing:0.1em;padding:5px 12px;cursor:pointer;text-transform:uppercase;transition:background 0.15s;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.btn-add-enriched{background:var(--teal-bg);border:0.5px solid var(--teal-line);border-radius:2px;color:var(--teal);font-family:var(--sans);font-size:9px;font-weight:500;letter-spacing:0.1em;padding:5px 12px;cursor:pointer;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-top:2px}
 .btn-add-enriched:hover{background:rgba(74,168,154,0.22)}
 .btn-add-enriched.added{background:rgba(90,158,110,0.10);border-color:rgba(90,158,110,0.28);color:#6ec98a;cursor:default}
 
-.add-link-form{display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end}
 .aff{display:flex;flex-direction:column;gap:3px}
 .aff label{font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--w3)}
 .aff input,.aff select{background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--w);font-family:var(--sans);font-size:11px;padding:5px 9px;outline:none;transition:border-color 0.2s}
 .aff input:focus,.aff select:focus{border-color:var(--gold)}
 .aff select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' fill='none'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23c9a96e' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;padding-right:22px;cursor:pointer}
-.btn-add-link{background:var(--teal-bg);border:0.5px solid var(--teal-line);border-radius:3px;color:var(--teal);font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.1em;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:background 0.15s;align-self:flex-end;white-space:nowrap}
-.btn-add-link:hover{background:rgba(74,168,154,0.22)}
+.btn-add{background:var(--teal-bg);border:0.5px solid var(--teal-line);border-radius:3px;color:var(--teal);font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:0.1em;padding:6px 14px;cursor:pointer;text-transform:uppercase;align-self:flex-end;white-space:nowrap}
+.btn-add:hover{background:rgba(74,168,154,0.22)}
 
 .proba-big{display:flex;align-items:center;gap:18px}
 .proba-score{font-family:var(--serif);font-size:40px;font-weight:300}
 .proba-factors{display:flex;flex-direction:column;gap:4px;flex:1}
 .pf-row{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--w3)}
-.pf-bar{flex:1;height:2px;background:var(--bg4);border-radius:1px;overflow:hidden}
+.pf-bar-w{flex:1;height:2px;background:var(--bg4);border-radius:1px;overflow:hidden}
 .pf-fill{height:100%;border-radius:1px}
 
 .modal{background:var(--bg2);border:0.5px solid var(--gold-line);border-radius:4px;padding:24px;width:460px;max-width:94vw;position:relative}
@@ -150,12 +143,12 @@ tbody td:nth-child(2){color:var(--w);font-weight:500}
 .field input,.field select{width:100%;background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--w);font-family:var(--sans);font-size:13px;padding:7px 12px;outline:none;transition:border-color 0.2s}
 .field input:focus,.field select:focus{border-color:var(--gold)}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a96e' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
-.li-input-wrap{position:relative;display:flex;align-items:center}
-.li-input-wrap input{padding-left:34px}
-.li-logo{position:absolute;left:11px;width:14px;height:14px;opacity:0.6;pointer-events:none}
+.li-wrap{position:relative;display:flex;align-items:center}
+.li-wrap input{padding-left:32px}
+.li-logo{position:absolute;left:10px;width:14px;height:14px;opacity:0.6;pointer-events:none}
 .field-hint{font-size:9px;color:var(--w3);margin-top:3px}
 .modal-btns{display:flex;gap:8px;margin-top:16px}
-.btn-save{flex:1;background:var(--gold-dim);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--gold2);font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.1em;padding:9px;cursor:pointer;text-transform:uppercase;transition:background 0.15s}
+.btn-save{flex:1;background:var(--gold-dim);border:0.5px solid var(--gold-line);border-radius:3px;color:var(--gold2);font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.1em;padding:9px;cursor:pointer;text-transform:uppercase}
 .btn-save:hover{background:rgba(201,169,110,0.22)}
 .btn-cancel{background:none;border:0.5px solid rgba(255,255,255,0.08);border-radius:3px;color:var(--w3);font-family:var(--sans);font-size:11px;padding:9px 14px;cursor:pointer;text-transform:uppercase}
 .btn-cancel:hover{background:var(--bg4)}
@@ -173,419 +166,581 @@ tbody td:nth-child(2){color:var(--w);font-weight:500}
 <header>
   <div>
     <div class="h-title">Lead<em>Tracker</em> <span style="font-size:13px;color:var(--w3);font-family:var(--sans);font-weight:300">· Médical Genève</span></div>
-    <div class="h-sub">Plan 1e · Réseau de recommandations</div>
+    <div class="h-sub">Plan 1e · Introduction par le réseau</div>
   </div>
-  <div class="h-right">
-    <span class="h-tag tag-cible" id="count-cible">0 cibles</span>
-    <span class="h-tag tag-relais" id="count-relais">0 relais</span>
+  <div class="h-counts">
+    <span class="h-tag tag-contact" id="count-contacts">0 contacts</span>
+    <span class="h-tag tag-prospect" id="count-prospects">0 prospects</span>
   </div>
 </header>
 
-<div class="toolbar">
-  <input class="tb-input" type="text" id="search" placeholder="Rechercher..." oninput="render()" style="width:170px">
-  <select class="tb-input" id="f-type" onchange="render()" style="width:112px">
-    <option value="">Cibles + Relais</option><option value="cible">Cibles</option><option value="relais">Relais</option>
-  </select>
-  <select class="tb-input" id="f-statut" onchange="render()" style="width:120px">
-    <option value="">Tous statuts</option><option value="New">New</option><option value="Contacted">Contacted</option>
-    <option value="Qualified">Qualified</option><option value="Won">Won</option><option value="Lost">Lost</option>
-  </select>
-  <select class="tb-input" id="f-spe" onchange="render()" style="width:142px">
-    <option value="">Toutes spécialités</option>
-    <option>Cardiologie</option><option>Chirurgie</option><option>Dermatologie</option>
-    <option>Gynécologie</option><option>Neurologie</option><option>Oncologie</option>
-    <option>Ophtalmologie</option><option>Orthopédie</option><option>Pédiatrie</option>
-    <option>Psychiatrie</option><option>Radiologie</option><option>Urologie</option><option>Autre</option>
-  </select>
-  <div class="tb-spacer"></div>
-  <button class="btn-primary" onclick="openNewLead()">+ Nouveau lead</button>
+<div class="tabs">
+  <div class="tab active" id="tab-contacts" onclick="switchTab('contacts')">Niveau 1 — Contacts connus</div>
+  <div class="tab" id="tab-prospects" onclick="switchTab('prospects')">Niveau 2 — Prospects LPP</div>
 </div>
 
-<div class="table-wrap">
-<table>
-  <thead><tr>
-    <th data-col="type" onclick="toggleSort('type')">Type <span class="sort-arrow" id="arr-type"></span></th>
-    <th data-col="nom" onclick="toggleSort('nom')">Nom <span class="sort-arrow" id="arr-nom"></span></th>
-    <th data-col="soc" onclick="toggleSort('soc')">Cabinet / Clinique <span class="sort-arrow" id="arr-soc"></span></th>
-    <th data-col="spe" onclick="toggleSort('spe')">Spécialité <span class="sort-arrow" id="arr-spe"></span></th>
-    <th data-col="statut" onclick="toggleSort('statut')">Statut <span class="sort-arrow" id="arr-statut"></span></th>
-    <th data-col="proba" onclick="toggleSort('proba')">Proba LPP <span class="sort-arrow sort-active" id="arr-proba">↓</span></th>
-    <th>LinkedIn</th>
-  </tr></thead>
-  <tbody id="tbody"></tbody>
-</table>
-<div id="empty-state" class="empty" style="display:none">
-  <div style="font-size:26px;opacity:0.15;margin-bottom:10px">◈</div>
-  <div>Aucun lead · <strong style="color:var(--gold)">+ Nouveau lead</strong> pour commencer</div>
-</div>
+<!-- CONTACTS -->
+<div id="view-contacts">
+  <div class="toolbar">
+    <input class="tb-input" type="text" id="search-c" placeholder="Rechercher..." oninput="renderContacts()" style="width:170px">
+    <select class="tb-input" id="fc-senio" onchange="renderContacts()" style="width:135px">
+      <option value="">Toutes séniorités</option>
+      <option value="partner">Partner / Dir.</option>
+      <option value="senior">Senior</option>
+      <option value="junior">Junior</option>
+    </select>
+    <div class="tb-spacer"></div>
+    <button class="btn-primary" onclick="openModal('contact')">+ Nouveau contact</button>
+  </div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th style="width:22%" data-col="nom" onclick="toggleSortC('nom')">Nom <span class="sort-arrow" id="arrc-nom"></span></th>
+      <th style="width:20%" data-col="role" onclick="toggleSortC('role')">Rôle / Société <span class="sort-arrow" id="arrc-role"></span></th>
+      <th style="width:13%" data-col="senio" onclick="toggleSortC('senio')">Séniorité <span class="sort-arrow" id="arrc-senio"></span></th>
+      <th style="width:12%" data-col="lien" onclick="toggleSortC('lien')">Lien GFI <span class="sort-arrow" id="arrc-lien"></span></th>
+      <th style="width:10%">LinkedIn</th>
+      <th style="width:15%" data-col="prospects" onclick="toggleSortC('prospects')">Prospects liés <span class="sort-arrow sort-active" id="arrc-prospects">↓</span></th>
+      <th style="width:8%"></th>
+    </tr></thead>
+    <tbody id="tbody-contacts"></tbody>
+  </table>
+  <div id="empty-contacts" class="empty" style="display:none">
+    <div style="font-size:24px;opacity:0.15;margin-bottom:10px">◈</div>
+    <div>Aucun contact · <strong style="color:var(--gold)">+ Nouveau contact</strong> pour commencer</div>
+  </div>
+  </div>
 </div>
 
-<!-- FICHE -->
-<div class="overlay" id="fiche-overlay">
+<!-- PROSPECTS -->
+<div id="view-prospects" style="display:none">
+  <div class="toolbar">
+    <input class="tb-input" type="text" id="search-p" placeholder="Rechercher..." oninput="renderProspects()" style="width:170px">
+    <select class="tb-input" id="fp-statut" onchange="renderProspects()" style="width:120px">
+      <option value="">Tous statuts</option>
+      <option value="New">New</option><option value="Contacted">Contacted</option>
+      <option value="Qualified">Qualified</option><option value="Proposal">Proposal</option>
+      <option value="Won">Won</option><option value="Lost">Lost</option>
+    </select>
+    <select class="tb-input" id="fp-spe" onchange="renderProspects()" style="width:140px">
+      <option value="">Toutes spécialités</option>
+      <option>Cardiologie</option><option>Chirurgie</option><option>Dermatologie</option>
+      <option>Gynécologie</option><option>Neurologie</option><option>Oncologie</option>
+      <option>Ophtalmologie</option><option>Orthopédie</option><option>Pédiatrie</option>
+      <option>Psychiatrie</option><option>Radiologie</option><option>Urologie</option><option>Autre</option>
+    </select>
+    <div class="tb-spacer"></div>
+    <button class="btn-primary" onclick="openModal('prospect')">+ Nouveau prospect</button>
+  </div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th style="width:20%" data-col="nom" onclick="toggleSortP('nom')">Nom <span class="sort-arrow" id="arrp-nom"></span></th>
+      <th style="width:17%" data-col="soc" onclick="toggleSortP('soc')">Cabinet / Clinique <span class="sort-arrow" id="arrp-soc"></span></th>
+      <th style="width:12%" data-col="spe" onclick="toggleSortP('spe')">Spécialité <span class="sort-arrow" id="arrp-spe"></span></th>
+      <th style="width:11%" data-col="statut" onclick="toggleSortP('statut')">Statut <span class="sort-arrow" id="arrp-statut"></span></th>
+      <th style="width:10%">LinkedIn</th>
+      <th style="width:16%" data-col="proba" onclick="toggleSortP('proba')">Proba LPP <span class="sort-arrow sort-active" id="arrp-proba">↓</span></th>
+      <th style="width:14%">Introduit par</th>
+    </tr></thead>
+    <tbody id="tbody-prospects"></tbody>
+  </table>
+  <div id="empty-prospects" class="empty" style="display:none">
+    <div style="font-size:24px;opacity:0.15;margin-bottom:10px">◈</div>
+    <div>Aucun prospect · <strong style="color:var(--gold)">+ Nouveau prospect</strong> pour commencer</div>
+  </div>
+  </div>
+</div>
+
+<!-- FICHE CONTACT -->
+<div class="overlay" id="fiche-contact-overlay">
   <div class="fiche">
     <div class="fiche-top">
       <div style="flex:1">
-        <div class="fiche-name" id="fiche-name"></div>
-        <div class="fiche-sub" id="fiche-sub"></div>
-        <div style="display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;align-items:center" id="fiche-badges"></div>
+        <div class="fiche-name" id="fc-name"></div>
+        <div class="fiche-sub" id="fc-sub"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center" id="fc-badges"></div>
       </div>
       <div class="fiche-top-right">
-        <button class="close-x" onclick="closeFiche()">✕</button>
-        <button class="icon-btn" onclick="editLead()">Modifier</button>
-        <button class="icon-btn" id="btn-promote" style="display:none;color:var(--gold);border-color:var(--gold-line)" onclick="promoteToLead()">→ Ajouter aux leads</button>
+        <button class="close-x" onclick="closeFicheContact()">✕</button>
+        <button class="icon-btn" onclick="editContact()">Modifier</button>
       </div>
     </div>
-
     <div class="section-block">
       <div class="section-header">
-        <div class="section-title">Réseau de connexions</div>
-        <div class="arbre-filters">
-          <button class="filter-btn active-all" id="fbtn-all" onclick="setArbreFilter('all')">Tous</button>
-          <button class="filter-btn" id="fbtn-pro" onclick="setArbreFilter('pro')">Pro</button>
-          <button class="filter-btn" id="fbtn-perso" onclick="setArbreFilter('perso')">Perso</button>
-        </div>
+        <div class="section-title">Prospects qu'il/elle peut introduire</div>
       </div>
-      <div id="arbre-svg-wrap">
-        <svg id="arbre-svg" height="280"></svg>
-        <div class="node-tooltip" id="node-tooltip">
-          <div class="nt-name" id="nt-name"></div>
-          <div class="nt-role" id="nt-role"></div>
-          <div class="nt-link-type" id="nt-link-type"></div>
-          <div class="nt-proba" id="nt-proba"></div>
-          <button class="nt-btn" id="nt-promote-btn" onclick="promoteNodeToLead()">+ Ajouter aux leads</button>
-        </div>
-      </div>
+      <div id="fc-prospects-list"></div>
     </div>
-
     <div class="section-block">
       <div class="section-header">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="section-title">Connexions suggérées par l'IA</div>
-          <span class="ai-badge">✦ web search</span>
-        </div>
-        <button class="btn-enrich" id="btn-enrich" onclick="enrichConnexions()">
-          <span id="enrich-btn-txt">✦ Trouver des connexions</span>
-        </button>
+        <div class="section-title">Arbre d'introductions</div>
       </div>
-      <div id="enriched-list"></div>
+      <div id="arbre-contact-wrap">
+        <svg id="arbre-contact-svg" class="arbre-svg" height="240"></svg>
+        <div class="node-tooltip" id="node-tooltip-c">
+          <div class="nt-name" id="ntc-name"></div>
+          <div class="nt-role" id="ntc-role"></div>
+          <div class="nt-meta" id="ntc-meta"></div>
+        </div>
+      </div>
     </div>
-
     <div class="section-block">
-      <div class="section-header"><div class="section-title" style="color:var(--w3)">Ajouter une connexion manuelle</div></div>
-      <div class="add-link-form">
-        <div class="aff"><label>Nom</label><input id="nl-nom" type="text" placeholder="Marie Dupont" style="width:130px"></div>
-        <div class="aff"><label>Rôle / Poste</label><input id="nl-role" type="text" placeholder="Chirurgien, HUG" style="width:150px"></div>
-        <div class="aff"><label>Type</label>
-          <select id="nl-type" style="width:90px"><option value="perso">Perso</option><option value="pro">Pro</option></select>
+      <div class="section-header">
+        <div class="section-title">Recherche IA de prospects potentiels</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="btn-enrich" id="btn-enrich-c" onclick="enrichProspects()">
+            <span id="enrich-c-txt">✦ Trouver des prospects</span>
+          </button>
+          <div style="position:relative">
+            <button onclick="toggleInfoC()" style="width:22px;height:22px;border-radius:50%;background:var(--bg4);border:0.5px solid var(--gold-line);color:var(--gold);font-family:var(--serif);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">i</button>
+            <div id="info-popup-c" style="display:none;position:absolute;right:0;top:28px;width:230px;background:var(--bg3);border:0.5px solid var(--gold-line);border-radius:3px;padding:12px 14px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.5)">
+              <div style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:7px">À propos</div>
+              <div style="font-size:11px;color:var(--w2);line-height:1.6;margin-bottom:8px">L'IA recherche sur LinkedIn et le web les profils médicaux que ce contact pourrait introduire dans votre réseau.</div>
+              <div style="font-size:11px;color:var(--w2);line-height:1.6;margin-bottom:8px">~0.03€ par recherche.</div>
+              <div style="font-size:10px;color:var(--w3);border-top:0.5px solid var(--gold-line);padding-top:8px">Si l'outil ne répond plus :<br><a href="mailto:louis.ballorin@edhec.com" style="color:var(--teal);text-decoration:none">louis.ballorin@edhec.com</a></div>
+            </div>
+          </div>
         </div>
-        <div class="aff"><label>Force</label>
-          <select id="nl-force" style="width:86px"><option value="fort">Fort</option><option value="moyen">Moyen</option><option value="faible">Faible</option></select>
-        </div>
-        <div class="aff"><label>Séniorité</label>
-          <select id="nl-senio" style="width:106px"><option value="partner">Partner/Dir.</option><option value="senior">Senior</option><option value="junior">Junior</option></select>
-        </div>
-        <button class="btn-add-link" onclick="addLink()">+ Ajouter</button>
       </div>
+      <div id="enriched-prospects-list"></div>
     </div>
-
     <div class="section-block" style="border-bottom:none">
-      <div class="section-header"><div class="section-title" style="color:var(--w3)">Probabilité de recommandation LPP</div></div>
-      <div class="proba-big">
-        <div>
-          <div class="proba-score" id="proba-score">—</div>
-          <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--w3)">score global</div>
+      <div class="section-header"><div class="section-title" style="color:var(--w3)">Lier un prospect existant</div></div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
+        <div class="aff"><label>Prospect</label>
+          <select id="link-prospect-select" style="width:220px"><option value="">Choisir...</option></select>
         </div>
-        <div class="proba-factors" id="proba-factors"></div>
+        <div class="aff"><label>Force de l'intro</label>
+          <select id="link-force" style="width:110px"><option value="fort">Fort</option><option value="moyen">Moyen</option><option value="faible">Faible</option></select>
+        </div>
+        <button class="btn-add" onclick="addLinkFromContact()">Lier</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL LEAD -->
+<!-- FICHE PROSPECT -->
+<div class="overlay" id="fiche-prospect-overlay">
+  <div class="fiche">
+    <div class="fiche-top">
+      <div style="flex:1">
+        <div class="fiche-name" id="fp-name"></div>
+        <div class="fiche-sub" id="fp-sub"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center" id="fp-badges"></div>
+      </div>
+      <div class="fiche-top-right">
+        <button class="close-x" onclick="closeFicheProspect()">✕</button>
+        <button class="icon-btn" onclick="editProspect()">Modifier</button>
+      </div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><div class="section-title">Peut être introduit par</div></div>
+      <div id="fp-contacts-list"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><div class="section-title">Arbre d'introductions</div></div>
+      <div id="arbre-prospect-wrap">
+        <svg id="arbre-prospect-svg" class="arbre-svg" height="240"></svg>
+        <div class="node-tooltip" id="node-tooltip-p">
+          <div class="nt-name" id="ntp-name"></div>
+          <div class="nt-role" id="ntp-role"></div>
+          <div class="nt-meta" id="ntp-meta"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section-block" style="border-bottom:none">
+      <div class="section-header"><div class="section-title" style="color:var(--w3)">Probabilité de recommandation LPP</div></div>
+      <div class="proba-big">
+        <div><div class="proba-score" id="fp-proba-score">—</div><div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--w3)">score global</div></div>
+        <div class="proba-factors" id="fp-proba-factors"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
 <div class="overlay" id="modal-overlay">
   <div class="modal">
-    <button class="close-x" style="position:absolute;top:14px;right:14px" onclick="closeNewLead()">✕</button>
-    <div class="modal-title" id="modal-title">Nouveau <em>lead</em></div>
-    <div class="field"><label>Nom complet</label><input id="m-nom" type="text" placeholder="Dr. Jean Martin"></div>
-    <div class="field"><label>Cabinet / Clinique</label><input id="m-soc" type="text" placeholder="Clinique La Colline"></div>
-    <div style="display:flex;gap:10px">
-      <div class="field" style="flex:1"><label>Spécialité</label>
-        <select id="m-spe">
-          <option>Cardiologie</option><option>Chirurgie</option><option>Dermatologie</option>
-          <option>Gynécologie</option><option>Neurologie</option><option>Oncologie</option>
-          <option>Ophtalmologie</option><option>Orthopédie</option><option>Pédiatrie</option>
-          <option>Psychiatrie</option><option>Radiologie</option><option>Urologie</option><option>Autre</option>
-        </select>
-      </div>
-      <div class="field" style="flex:1"><label>Statut</label>
-        <select id="m-statut">
-          <option value="New">New</option><option value="Contacted">Contacted</option>
-          <option value="Qualified">Qualified</option><option value="Proposal">Proposal</option>
-          <option value="Won">Won</option><option value="Lost">Lost</option>
-        </select>
-      </div>
-    </div>
-    <div class="field"><label>Contact (email / tél)</label><input id="m-contact" type="text" placeholder="j.martin@clinique.ch"></div>
-    <div class="field">
-      <label>LinkedIn</label>
-      <div class="li-input-wrap">
-        <svg class="li-logo" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        <input id="m-linkedin" type="text" placeholder="linkedin.com/in/jean-martin">
-      </div>
-      <div class="field-hint">URL complète ou nom d'utilisateur</div>
-    </div>
-    <div class="field"><label>Notes</label><input id="m-notes" type="text" placeholder="Connu via..."></div>
+    <button class="close-x" style="position:absolute;top:14px;right:14px" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Nouveau <em>contact</em></div>
+    <div id="modal-fields"></div>
     <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeNewLead()">Annuler</button>
-      <button class="btn-save" onclick="saveNewLead()">Enregistrer</button>
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" onclick="saveModal()">Enregistrer</button>
     </div>
   </div>
 </div>
 
 <script>
-const SK='gfi_lt_v1';
+const SK='gfi_lt_final_v1';
 const STATUS_CLASS={New:'st-new',Contacted:'st-contacted',Qualified:'st-qualified',Proposal:'st-proposal',Won:'st-won',Lost:'st-lost'};
 const STATUS_ORDER={New:0,Contacted:1,Qualified:2,Proposal:3,Won:4,Lost:5};
-const FORCE_W={fort:1,moyen:0.6,faible:0.3};
-const TYPE_W={perso:1.4,pro:1};
 const SENIO_W={partner:1.4,senior:1,junior:0.55};
-const DEMO=[
-  {id:'1',type:'cible',nom:'Dr. Claire Tissot',soc:'Clinique La Colline',spe:'Cardiologie',statut:'New',contact:'c.tissot@lacolline.ch',linkedin:'linkedin.com/in/claire-tissot',notes:'Recommandée par Marc',links:[{id:'l1',nom:'Prof. Bernard Favre',role:'Chef cardio, HUG',type:'pro',force:'fort',senio:'partner'},{id:'l2',nom:'Sophie Muller',role:'Épouse associé Leclerc',type:'perso',force:'moyen',senio:'senior'}]},
-  {id:'2',type:'cible',nom:'Dr. Antoine Berger',soc:'Centre Médical Rive',spe:'Orthopédie',statut:'Contacted',contact:'a.berger@cmrive.ch',linkedin:'',notes:'',links:[{id:'l3',nom:'Dr. Pierre Rochat',role:'Associé GFI, orthopédiste retraité',type:'perso',force:'fort',senio:'partner'},{id:'l4',nom:'Marc Chevalier',role:'Golf Club Genève',type:'perso',force:'moyen',senio:'senior'},{id:'l5',nom:'Dr. Lena Vogel',role:'Même promo UNIGE 2001',type:'pro',force:'moyen',senio:'senior'}]},
-  {id:'3',type:'cible',nom:'Dr. Yves Chappuis',soc:'Hirslanden Genève',spe:'Neurologie',statut:'Qualified',contact:'y.chappuis@hirslanden.ch',linkedin:'linkedin.com/in/yves-chappuis',notes:'',links:[{id:'l7',nom:'Anne-Sophie Pittet',role:'Directrice, Roche Genève',type:'perso',force:'fort',senio:'partner'},{id:'l8',nom:'Dr. Fabian Käser',role:'Co-auteur publication 2022',type:'pro',force:'fort',senio:'senior'}]},
-];
+const FORCE_W={fort:1,moyen:0.6,faible:0.3};
+const LIEN_W={fort:1.4,moyen:1,faible:0.6};
+const LI_SVG='<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
 
-let leads=[],ficheId=null,editId=null,arbreFilter='all',sortCol='proba',sortAsc=false,tooltipNode=null;
+let contacts=[],prospects=[];
+let ficheContactId=null,ficheProspectId=null,modalMode=null,editId=null;
+let sortCCol='prospects',sortCAsc=false,sortPCol='proba',sortPAsc=false;
 
-function saveLeads(){localStorage.setItem(SK,JSON.stringify(leads));}
-function loadLeads(){try{const r=localStorage.getItem(SK);if(r) leads=JSON.parse(r);else{leads=DEMO;saveLeads();}}catch(e){leads=DEMO;}}
+function saveData(){localStorage.setItem(SK,JSON.stringify({contacts,prospects}));}
+function loadData(){try{const r=localStorage.getItem(SK);if(r){const d=JSON.parse(r);contacts=d.contacts||[];prospects=d.prospects||[];}}catch(e){}}
 
-function liUrl(raw){if(!raw) return null;if(raw.startsWith('http')) return raw;if(raw.startsWith('linkedin.com')) return 'https://'+raw;return 'https://linkedin.com/in/'+raw;}
-function calcProba(lead){if(!lead.links||!lead.links.length) return 0;let raw=lead.links.reduce((acc,l)=>acc+(FORCE_W[l.force]||0.3)*(TYPE_W[l.type]||1)*(SENIO_W[l.senio]||0.7)*30,0);const div=lead.links.some(l=>l.type==='perso')&&lead.links.some(l=>l.type==='pro')?1.15:1;const multi=lead.links.length>2?1.1:1;return Math.min(98,Math.round(raw*div*multi));}
+function liUrl(raw){if(!raw)return null;if(raw.startsWith('http'))return raw;if(raw.startsWith('linkedin.com'))return'https://'+raw;return'https://linkedin.com/in/'+raw;}
+function liBtn(url,stop=true){if(!url)return'<span style="color:var(--w3);font-size:10px">—</span>';return`<a class="li-btn" href="${liUrl(url)}" target="_blank" ${stop?'onclick="event.stopPropagation()"':''}>${LI_SVG}Voir</a>`;}
+
+function calcProba(p){
+  const links=getProspectLinks(p.id);
+  if(!links.length)return 0;
+  let raw=links.reduce((acc,l)=>{const c=contacts.find(x=>x.id===l.contactId);if(!c)return acc;return acc+(SENIO_W[c.senio]||1)*(LIEN_W[c.lien]||1)*(FORCE_W[l.force]||0.6)*28;},0);
+  return Math.min(98,Math.round(raw*(links.length>1?1.15:1)));
+}
 function probaColor(p){return p>=75?'#6ec98a':p>=45?'#c9a96e':'#e08080';}
+function getProspectLinks(pid){const r=[];contacts.forEach(c=>{(c.prospectLinks||[]).forEach(l=>{if(l.prospectId===pid)r.push({contactId:c.id,force:l.force});});});return r;}
+function getContactProspects(cid){const c=contacts.find(x=>x.id===cid);if(!c)return[];return(c.prospectLinks||[]).map(l=>{const p=prospects.find(x=>x.id===l.prospectId);return p?{prospect:p,force:l.force}:null;}).filter(Boolean);}
+
+function switchTab(tab){
+  document.getElementById('view-contacts').style.display=tab==='contacts'?'block':'none';
+  document.getElementById('view-prospects').style.display=tab==='prospects'?'block':'none';
+  document.getElementById('tab-contacts').className='tab'+(tab==='contacts'?' active':'');
+  document.getElementById('tab-prospects').className='tab'+(tab==='prospects'?' active':'');
+}
+
+function updateCounts(){
+  document.getElementById('count-contacts').textContent=contacts.length+' contact'+(contacts.length!==1?'s':'');
+  document.getElementById('count-prospects').textContent=prospects.length+' prospect'+(prospects.length!==1?'s':'');
+}
+
+function toggleSortC(col){if(sortCCol===col)sortCAsc=!sortCAsc;else{sortCCol=col;sortCAsc=col!=='prospects';}document.querySelectorAll('#view-contacts thead th').forEach(th=>{th.classList.remove('sort-active');const a=th.querySelector('.sort-arrow');if(a)a.textContent='';});const th=document.querySelector(`#view-contacts th[data-col="${col}"]`);if(th){th.classList.add('sort-active');const a=th.querySelector('.sort-arrow');if(a)a.textContent=sortCAsc?'↑':'↓';}renderContacts();}
+function toggleSortP(col){if(sortPCol===col)sortPAsc=!sortPAsc;else{sortPCol=col;sortPAsc=col!=='proba';}document.querySelectorAll('#view-prospects thead th').forEach(th=>{th.classList.remove('sort-active');const a=th.querySelector('.sort-arrow');if(a)a.textContent='';});const th=document.querySelector(`#view-prospects th[data-col="${col}"]`);if(th){th.classList.add('sort-active');const a=th.querySelector('.sort-arrow');if(a)a.textContent=sortPAsc?'↑':'↓';}renderProspects();}
+
+function renderContacts(){
+  const q=document.getElementById('search-c').value.toLowerCase();
+  const fs=document.getElementById('fc-senio').value;
+  let f=contacts.filter(c=>(!q||(c.nom+c.role).toLowerCase().includes(q))&&(!fs||c.senio===fs));
+  f.sort((a,b)=>{let va,vb;if(sortCCol==='prospects'){va=getContactProspects(a.id).length;vb=getContactProspects(b.id).length;}else{va=(a[sortCCol]||'').toLowerCase();vb=(b[sortCCol]||'').toLowerCase();}return va<vb?(sortCAsc?-1:1):va>vb?(sortCAsc?1:-1):0;});
+  const tbody=document.getElementById('tbody-contacts');tbody.innerHTML='';
+  document.getElementById('empty-contacts').style.display=f.length===0?'block':'none';
+  f.forEach(c=>{
+    const np=getContactProspects(c.id).length;
+    const sl=c.senio==='partner'?'fort':c.senio==='senior'?'moyen':'faible';
+    const sn=c.senio==='partner'?'Partner/Dir.':c.senio==='senior'?'Senior':'Junior';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td title="${c.nom}">${c.nom}</td><td style="font-size:11px;color:var(--w3)" title="${c.role||''}">${c.role||'—'}</td><td><span class="badge lien-${sl}">${sn}</span></td><td><span class="badge lien-${c.lien||'moyen'}">${c.lien||'moyen'}</span></td><td>${liBtn(c.linkedin)}</td><td style="color:${np>0?'var(--teal)':'var(--w3)'};font-size:11px">${np>0?np+' prospect'+(np>1?'s':''):'Aucun'}</td><td><button style="background:none;border:none;color:var(--w3);cursor:pointer;font-size:12px;padding:2px 4px" onclick="event.stopPropagation();deleteContact('${c.id}')">✕</button></td>`;
+    tr.onclick=()=>openFicheContact(c.id);tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function renderProspects(){
+  const q=document.getElementById('search-p').value.toLowerCase();
+  const fs=document.getElementById('fp-statut').value;
+  const fsp=document.getElementById('fp-spe').value;
+  let f=prospects.filter(p=>(!q||(p.nom+(p.soc||'')+(p.spe||'')).toLowerCase().includes(q))&&(!fs||p.statut===fs)&&(!fsp||p.spe===fsp));
+  f.sort((a,b)=>{let va,vb;if(sortPCol==='proba'){va=calcProba(a);vb=calcProba(b);}else if(sortPCol==='statut'){va=STATUS_ORDER[a.statut]||0;vb=STATUS_ORDER[b.statut]||0;}else{va=(a[sortPCol]||'').toLowerCase();vb=(b[sortPCol]||'').toLowerCase();}return va<vb?(sortPAsc?-1:1):va>vb?(sortPAsc?1:-1):0;});
+  const tbody=document.getElementById('tbody-prospects');tbody.innerHTML='';
+  document.getElementById('empty-prospects').style.display=f.length===0?'block':'none';
+  f.forEach(p=>{
+    const proba=calcProba(p),pc=probaColor(proba);
+    const links=getProspectLinks(p.id);
+    const introNames=links.map(l=>{const c=contacts.find(x=>x.id===l.contactId);return c?c.nom.split(' ').pop():'?';}).slice(0,2).join(', ')+(links.length>2?'…':'');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td title="${p.nom}">${p.nom}</td><td style="font-size:11px;color:var(--w3)" title="${p.soc||''}">${p.soc||'—'}</td><td style="font-size:11px;color:var(--w3)">${p.spe||'—'}</td><td><span class="badge ${STATUS_CLASS[p.statut]||'st-new'}">${p.statut}</span></td><td>${liBtn(p.linkedin)}</td><td>${proba>0?`<div class="proba-bar"><div class="proba-track"><div class="proba-fill" style="width:${proba}%;background:${pc}"></div></div><div class="proba-txt" style="color:${pc}">${proba}%</div></div>`:'<span style="color:var(--w3);font-size:11px">— lier un contact</span>'}</td><td style="font-size:10px;color:var(--w3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${introNames||'—'}</td>`;
+    tr.onclick=()=>openFicheProspect(p.id);tbody.appendChild(tr);
+  });
+  updateCounts();
+}
+
+function openFicheContact(id){
+  const c=contacts.find(x=>x.id===id);if(!c)return;ficheContactId=id;
+  document.getElementById('fc-name').textContent=c.nom;
+  document.getElementById('fc-sub').textContent=(c.role||'')+(c.notes?' · '+c.notes:'');
+  const sl=c.senio==='partner'?'fort':c.senio==='senior'?'moyen':'faible';
+  const sn=c.senio==='partner'?'Partner/Dir.':c.senio==='senior'?'Senior':'Junior';
+  document.getElementById('fc-badges').innerHTML=`<span class="badge lien-${sl}">${sn}</span><span class="badge lien-${c.lien||'moyen'}">Lien ${c.lien||'moyen'}</span>${c.linkedin?`<a href="${liUrl(c.linkedin)}" target="_blank" class="li-btn">${LI_SVG}LinkedIn</a>`:''}`;
+  renderFicheContactProspects(c);renderArbreContact(c);updateLinkSelect();
+  document.getElementById('btn-enrich-c').disabled=false;
+  document.getElementById('enrich-c-txt').textContent=c.enrichedProspects&&c.enrichedProspects.length?'↺ Ré-analyser':'✦ Trouver des prospects';
+  renderEnrichedProspectsList(c);
+  document.getElementById('fiche-contact-overlay').classList.add('open');
+}
+function closeFicheContact(){document.getElementById('fiche-contact-overlay').classList.remove('open');ficheContactId=null;}
+
+function renderFicheContactProspects(c){
+  const list=document.getElementById('fc-prospects-list');
+  const linked=getContactProspects(c.id);
+  if(!linked.length){list.innerHTML='<div style="font-size:11px;color:var(--w3);padding:6px 0">Aucun prospect lié — utilisez le formulaire ci-dessous ou lancez une recherche IA.</div>';return;}
+  list.innerHTML=linked.map(({prospect:p,force})=>{
+    const proba=calcProba(p),pc=probaColor(proba);
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(201,169,110,0.08);cursor:pointer" onclick="closeFicheContact();setTimeout(()=>openFicheProspect('${p.id}'),150)">
+      <div><div style="font-size:12px;font-weight:500;color:var(--w)">${p.nom}</div><div style="font-size:10px;color:var(--w3);margin-top:2px">${p.spe||''} · ${p.soc||''}</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge lien-${force}">Intro ${force}</span>
+        ${proba>0?`<span style="font-size:11px;font-weight:500;color:${pc}">${proba}%</span>`:''}
+        <button style="background:none;border:none;color:var(--w3);cursor:pointer;font-size:11px;padding:2px 5px" onclick="event.stopPropagation();unlinkProspect('${c.id}','${p.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderArbreContact(c){
+  const svg=document.getElementById('arbre-contact-svg');
+  const wrap=document.getElementById('arbre-contact-wrap');
+  const W=wrap.offsetWidth||640,H=240;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const linked=getContactProspects(c.id);
+  const cx=W/2,cy=H/2,radius=linked.length<=3?85:linked.length<=6?105:120;
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');mk.setAttribute('id','ac');mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');mk.setAttribute('refX','5');mk.setAttribute('refY','3');mk.setAttribute('orient','auto');
+  const mp=document.createElementNS('http://www.w3.org/2000/svg','path');mp.setAttribute('d','M0,0 L0,6 L6,3 z');mp.setAttribute('fill','rgba(74,168,154,0.4)');mk.appendChild(mp);defs.appendChild(mk);svg.appendChild(defs);
+  if(!linked.length){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',cx);t.setAttribute('y',cy+4);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5a5550');t.setAttribute('font-size','11');t.setAttribute('font-family','Jost,sans-serif');t.textContent='Aucun prospect lié';svg.appendChild(t);}
+  linked.forEach(({prospect:p,force},i)=>{
+    const angle=(2*Math.PI*i/linked.length)-(Math.PI/2),x=cx+radius*Math.cos(angle),y=cy+radius*Math.sin(angle);
+    const sw=force==='fort'?1.5:force==='moyen'?1:0.5;
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',cx);l.setAttribute('y1',cy);l.setAttribute('x2',x);l.setAttribute('y2',y);l.setAttribute('stroke','rgba(74,168,154,0.4)');l.setAttribute('stroke-width',sw);l.setAttribute('marker-end','url(#ac)');if(force==='faible')l.setAttribute('stroke-dasharray','4 3');svg.appendChild(l);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.style.cursor='pointer';
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',x);circle.setAttribute('cy',y);circle.setAttribute('r','18');circle.setAttribute('fill','rgba(74,168,154,0.15)');circle.setAttribute('stroke','rgba(74,168,154,0.55)');circle.setAttribute('stroke-width','0.8');
+    const init=p.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ').map(s=>s[0]||'').join('').toUpperCase().slice(0,2);
+    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',x);tx.setAttribute('y',y+3);tx.setAttribute('text-anchor','middle');tx.setAttribute('fill','#4aa89a');tx.setAttribute('font-size','8');tx.setAttribute('font-family','Jost,sans-serif');tx.setAttribute('font-weight','500');tx.textContent=init;
+    const lb=document.createElementNS('http://www.w3.org/2000/svg','text');lb.setAttribute('x',x);lb.setAttribute('y',y>cy?y+31:y-23);lb.setAttribute('text-anchor','middle');lb.setAttribute('fill','#a09a90');lb.setAttribute('font-size','8');lb.setAttribute('font-family','Jost,sans-serif');lb.textContent=p.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ').pop();
+    g.appendChild(circle);g.appendChild(tx);g.appendChild(lb);
+    g.addEventListener('mouseenter',e=>{const tt=document.getElementById('node-tooltip-c');const sr=svg.getBoundingClientRect();const sx=sr.width/(W||640),sy=sr.height/240;let tx2=x*sx+14,ty2=y*sy-20;if(tx2+230>sr.width)tx2=x*sx-240;if(ty2<0)ty2=y*sy+28;tt.style.left=tx2+'px';tt.style.top=ty2+'px';document.getElementById('ntc-name').textContent=p.nom;document.getElementById('ntc-role').textContent=(p.spe||'')+(p.soc?' · '+p.soc:'');const proba=calcProba(p),pc=probaColor(proba);document.getElementById('ntc-meta').innerHTML=`<span style="color:${pc}">${proba>0?proba+'% LPP':''}</span> · Intro <strong>${force}</strong>`;tt.style.display='block';});
+    g.addEventListener('mouseleave',()=>{document.getElementById('node-tooltip-c').style.display='none';});
+    svg.appendChild(g);
+  });
+  const cg=document.createElementNS('http://www.w3.org/2000/svg','g');
+  const cc=document.createElementNS('http://www.w3.org/2000/svg','circle');cc.setAttribute('cx',cx);cc.setAttribute('cy',cy);cc.setAttribute('r','26');cc.setAttribute('fill','#1a1a1d');cc.setAttribute('stroke','rgba(201,169,110,0.6)');cc.setAttribute('stroke-width','1');
+  const ct=document.createElementNS('http://www.w3.org/2000/svg','text');ct.setAttribute('x',cx);ct.setAttribute('y',cy-2);ct.setAttribute('text-anchor','middle');ct.setAttribute('fill','#f0ede8');ct.setAttribute('font-size','8');ct.setAttribute('font-family','Jost,sans-serif');ct.setAttribute('font-weight','500');ct.textContent=c.nom.split(' ').pop();
+  const ct2=document.createElementNS('http://www.w3.org/2000/svg','text');ct2.setAttribute('x',cx);ct2.setAttribute('y',cy+9);ct2.setAttribute('text-anchor','middle');ct2.setAttribute('fill','#c9a96e');ct2.setAttribute('font-size','7');ct2.setAttribute('font-family','Jost,sans-serif');ct2.textContent=c.senio==='partner'?'Partner':c.senio==='senior'?'Senior':'Junior';
+  cg.appendChild(cc);cg.appendChild(ct);cg.appendChild(ct2);svg.appendChild(cg);
+}
+
+function openFicheProspect(id){
+  const p=prospects.find(x=>x.id===id);if(!p)return;ficheProspectId=id;
+  document.getElementById('fp-name').textContent=p.nom;
+  document.getElementById('fp-sub').textContent=(p.soc||'')+(p.spe?' · '+p.spe:'')+(p.contact?' · '+p.contact:'');
+  const proba=calcProba(p),pc=probaColor(proba);
+  document.getElementById('fp-badges').innerHTML=`<span class="badge ${STATUS_CLASS[p.statut]||'st-new'}">${p.statut}</span>${p.spe?`<span class="badge" style="background:var(--bg4);color:var(--w3);border:0.5px solid rgba(255,255,255,0.08)">${p.spe}</span>`:''}${p.linkedin?`<a href="${liUrl(p.linkedin)}" target="_blank" class="li-btn">${LI_SVG}LinkedIn</a>`:''}`;
+  renderFicheProspectContacts(p);renderArbreProspect(p);renderProba(p,proba,pc);
+  document.getElementById('fiche-prospect-overlay').classList.add('open');
+}
+function closeFicheProspect(){document.getElementById('fiche-prospect-overlay').classList.remove('open');ficheProspectId=null;}
+
+function renderFicheProspectContacts(p){
+  const list=document.getElementById('fp-contacts-list');
+  const links=getProspectLinks(p.id);
+  if(!links.length){list.innerHTML='<div style="font-size:11px;color:var(--w3);padding:6px 0">Aucun contact lié — allez dans l\'onglet Contacts pour lier ce prospect.</div>';return;}
+  list.innerHTML=links.map(l=>{
+    const c=contacts.find(x=>x.id===l.contactId);if(!c)return'';
+    const contrib=Math.round((SENIO_W[c.senio||'senior'])*(LIEN_W[c.lien||'moyen'])*(FORCE_W[l.force])*28);
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid rgba(201,169,110,0.08);cursor:pointer" onclick="closeFicheProspect();setTimeout(()=>openFicheContact('${c.id}'),150)">
+      <div><div style="font-size:12px;font-weight:500;color:var(--w)">${c.nom}</div><div style="font-size:10px;color:var(--w3);margin-top:2px">${c.role||''}</div></div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="badge lien-${l.force}">Intro ${l.force}</span><span style="font-size:10px;color:var(--gold)">+${contrib} pts</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderArbreProspect(p){
+  const svg=document.getElementById('arbre-prospect-svg');
+  const wrap=document.getElementById('arbre-prospect-wrap');
+  const W=wrap.offsetWidth||640,H=240;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const links=getProspectLinks(p.id);
+  const cx=W/2,cy=H/2,radius=links.length<=3?85:links.length<=6?105:120;
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');mk.setAttribute('id','ap');mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');mk.setAttribute('refX','5');mk.setAttribute('refY','3');mk.setAttribute('orient','auto');
+  const mp=document.createElementNS('http://www.w3.org/2000/svg','path');mp.setAttribute('d','M0,0 L0,6 L6,3 z');mp.setAttribute('fill','rgba(201,169,110,0.4)');mk.appendChild(mp);defs.appendChild(mk);svg.appendChild(defs);
+  if(!links.length){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',cx);t.setAttribute('y',cy+4);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5a5550');t.setAttribute('font-size','11');t.setAttribute('font-family','Jost,sans-serif');t.textContent='Aucun contact lié';svg.appendChild(t);}
+  links.forEach((l,i)=>{
+    const c=contacts.find(x=>x.id===l.contactId);if(!c)return;
+    const angle=(2*Math.PI*i/links.length)-(Math.PI/2),x=cx+radius*Math.cos(angle),y=cy+radius*Math.sin(angle);
+    const sw=l.force==='fort'?1.5:l.force==='moyen'?1:0.5;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x);line.setAttribute('y1',y);line.setAttribute('x2',cx);line.setAttribute('y2',cy);line.setAttribute('stroke','rgba(201,169,110,0.4)');line.setAttribute('stroke-width',sw);line.setAttribute('marker-end','url(#ap)');if(l.force==='faible')line.setAttribute('stroke-dasharray','4 3');svg.appendChild(line);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.style.cursor='pointer';
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',x);circle.setAttribute('cy',y);circle.setAttribute('r','18');circle.setAttribute('fill','rgba(201,169,110,0.12)');circle.setAttribute('stroke','rgba(201,169,110,0.5)');circle.setAttribute('stroke-width','0.8');
+    const init=c.nom.split(' ').map(s=>s[0]||'').join('').toUpperCase().slice(0,2);
+    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',x);tx.setAttribute('y',y+3);tx.setAttribute('text-anchor','middle');tx.setAttribute('fill','#c9a96e');tx.setAttribute('font-size','8');tx.setAttribute('font-family','Jost,sans-serif');tx.setAttribute('font-weight','500');tx.textContent=init;
+    const lb=document.createElementNS('http://www.w3.org/2000/svg','text');lb.setAttribute('x',x);lb.setAttribute('y',y>cy?y+31:y-23);lb.setAttribute('text-anchor','middle');lb.setAttribute('fill','#a09a90');lb.setAttribute('font-size','8');lb.setAttribute('font-family','Jost,sans-serif');lb.textContent=c.nom.split(' ').pop();
+    g.appendChild(circle);g.appendChild(tx);g.appendChild(lb);
+    g.addEventListener('mouseenter',e=>{const tt=document.getElementById('node-tooltip-p');const sr=svg.getBoundingClientRect();const sx=sr.width/(W||640),sy=sr.height/240;let tx2=x*sx+14,ty2=y*sy-20;if(tx2+230>sr.width)tx2=x*sx-240;if(ty2<0)ty2=y*sy+28;tt.style.left=tx2+'px';tt.style.top=ty2+'px';document.getElementById('ntp-name').textContent=c.nom;document.getElementById('ntp-role').textContent=c.role||'';const contrib=Math.round((SENIO_W[c.senio||'senior'])*(LIEN_W[c.lien||'moyen'])*(FORCE_W[l.force])*28);document.getElementById('ntp-meta').innerHTML=`Intro <strong>${l.force}</strong> · +${contrib} pts`;tt.style.display='block';});
+    g.addEventListener('mouseleave',()=>{document.getElementById('node-tooltip-p').style.display='none';});
+    svg.appendChild(g);
+  });
+  const cg=document.createElementNS('http://www.w3.org/2000/svg','g');
+  const cc=document.createElementNS('http://www.w3.org/2000/svg','circle');cc.setAttribute('cx',cx);cc.setAttribute('cy',cy);cc.setAttribute('r','26');cc.setAttribute('fill','#1a1a1d');cc.setAttribute('stroke','rgba(74,168,154,0.6)');cc.setAttribute('stroke-width','1');
+  const ct=document.createElementNS('http://www.w3.org/2000/svg','text');ct.setAttribute('x',cx);ct.setAttribute('y',cy-2);ct.setAttribute('text-anchor','middle');ct.setAttribute('fill','#f0ede8');ct.setAttribute('font-size','8');ct.setAttribute('font-family','Jost,sans-serif');ct.setAttribute('font-weight','500');ct.textContent=p.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ').pop();
+  const ct2=document.createElementNS('http://www.w3.org/2000/svg','text');ct2.setAttribute('x',cx);ct2.setAttribute('y',cy+9);ct2.setAttribute('text-anchor','middle');ct2.setAttribute('fill','#4aa89a');ct2.setAttribute('font-size','7');ct2.setAttribute('font-family','Jost,sans-serif');ct2.textContent=p.spe||'Prospect';
+  cg.appendChild(cc);cg.appendChild(ct);cg.appendChild(ct2);svg.appendChild(cg);
+}
+
+function renderProba(p,proba,pc){
+  document.getElementById('fp-proba-score').textContent=proba>0?proba+'%':'—';
+  document.getElementById('fp-proba-score').style.color=proba>0?pc:'var(--w3)';
+  const links=getProspectLinks(p.id);
+  const factors=[];
+  links.forEach(l=>{const c=contacts.find(x=>x.id===l.contactId);if(!c)return;const contrib=Math.round((SENIO_W[c.senio||'senior'])*(LIEN_W[c.lien||'moyen'])*(FORCE_W[l.force])*28);factors.push({label:c.nom+' · intro '+l.force,val:Math.min(100,contrib*2.5),color:l.force==='fort'?'var(--gold)':l.force==='moyen'?'var(--teal)':'var(--w3)'});});
+  if(!factors.length)factors.push({label:'Aucun contact lié',val:0,color:'var(--w3)'});
+  document.getElementById('fp-proba-factors').innerHTML=factors.map(f=>`<div class="pf-row"><span style="width:185px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.label}</span><div class="pf-bar-w"><div class="pf-fill" style="width:${f.val}%;background:${f.color}"></div></div><span style="min-width:32px;text-align:right;color:${f.color}">${Math.round(f.val)}%</span></div>`).join('');
+}
+
+function updateLinkSelect(){
+  const sel=document.getElementById('link-prospect-select');if(!sel)return;
+  sel.innerHTML='<option value="">Choisir...</option>';
+  prospects.forEach(p=>{sel.innerHTML+=`<option value="${p.id}">${p.nom}</option>`;});
+}
+function addLinkFromContact(){
+  const c=contacts.find(x=>x.id===ficheContactId);if(!c)return;
+  const pid=document.getElementById('link-prospect-select').value;
+  const force=document.getElementById('link-force').value;
+  if(!pid)return;
+  if(!c.prospectLinks)c.prospectLinks=[];
+  if(c.prospectLinks.find(l=>l.prospectId===pid))return;
+  c.prospectLinks.push({prospectId:pid,force});
+  saveData();renderFicheContactProspects(c);renderArbreContact(c);renderProspects();
+}
+function unlinkProspect(cid,pid){
+  const c=contacts.find(x=>x.id===cid);if(!c)return;
+  c.prospectLinks=(c.prospectLinks||[]).filter(l=>l.prospectId!==pid);
+  saveData();if(ficheContactId===cid){const cf=contacts.find(x=>x.id===cid);if(cf)renderFicheContactProspects(cf);}
+  renderProspects();
+}
 
 function showGlobalLoading(){document.getElementById('global-loading').classList.add('show');}
 function hideGlobalLoading(){document.getElementById('global-loading').classList.remove('show');}
 function setGlobalStep(txt){document.getElementById('gl-step').textContent=txt;}
 
-function toggleSort(col){
-  if(sortCol===col) sortAsc=!sortAsc;else{sortCol=col;sortAsc=col!=='proba';}
-  document.querySelectorAll('thead th').forEach(th=>{th.classList.remove('sort-active');const a=th.querySelector('.sort-arrow');if(a) a.textContent='';});
-  const th=document.querySelector(`th[data-col="${col}"]`);
-  if(th){th.classList.add('sort-active');const a=th.querySelector('.sort-arrow');if(a) a.textContent=sortAsc?'↑':'↓';}
-  render();
-}
-
-function render(){
-  const q=document.getElementById('search').value.toLowerCase();
-  const ft=document.getElementById('f-type').value,fs=document.getElementById('f-statut').value,fsp=document.getElementById('f-spe').value;
-  let filtered=leads.filter(l=>(!q||(l.nom+l.soc+l.spe).toLowerCase().includes(q))&&(!ft||l.type===ft)&&(!fs||l.statut===fs)&&(!fsp||l.spe===fsp));
-  filtered.sort((a,b)=>{let va,vb;if(sortCol==='proba'){va=calcProba(a);vb=calcProba(b);}else if(sortCol==='statut'){va=STATUS_ORDER[a.statut]||0;vb=STATUS_ORDER[b.statut]||0;}else{va=(a[sortCol]||'').toLowerCase();vb=(b[sortCol]||'').toLowerCase();}return va<vb?(sortAsc?-1:1):va>vb?(sortAsc?1:-1):0;});
-  const tbody=document.getElementById('tbody');tbody.innerHTML='';
-  document.getElementById('empty-state').style.display=filtered.length===0?'block':'none';
-  filtered.forEach(l=>{
-    const p=calcProba(l),pc=probaColor(p);
-    const aiDot=l.enrichedLinks&&l.enrichedLinks.length?'<span class="ai-badge" style="margin-left:4px;font-size:7px;padding:1px 5px">IA</span>':'';
-    const liHtml=l.linkedin?`<a class="li-btn" href="${liUrl(l.linkedin)}" target="_blank" onclick="event.stopPropagation()"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>Profil</a>`:'<span style="color:var(--w3);font-size:10px">—</span>';
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="badge b-${l.type}">${l.type==='cible'?'Cible':'Relais'}</span></td><td title="${l.nom}">${l.nom}${aiDot}</td><td title="${l.soc||''}">${l.soc||'—'}</td><td style="font-size:11px;color:var(--w3)">${l.spe||'—'}</td><td><span class="badge ${STATUS_CLASS[l.statut]||'st-new'}">${l.statut}</span></td><td>${p>0?`<div class="proba-bar"><div class="proba-track"><div class="proba-fill" style="width:${p}%;background:${pc}"></div></div><div class="proba-txt" style="color:${pc}">${p}%</div></div>`:'<span style="color:var(--w3);font-size:11px">— lien requis</span>'}</td><td>${liHtml}</td>`;
-    tr.onclick=()=>openFiche(l.id);tbody.appendChild(tr);
-  });
-  const nc=leads.filter(l=>l.type==='cible').length,nr=leads.filter(l=>l.type==='relais').length;
-  document.getElementById('count-cible').textContent=nc+' cible'+(nc>1?'s':'');
-  document.getElementById('count-relais').textContent=nr+' relais';
-}
-
-function openFiche(id){
-  const l=leads.find(x=>x.id===id);if(!l) return;
-  ficheId=id;
-  document.getElementById('fiche-name').textContent=l.nom;
-  document.getElementById('fiche-sub').textContent=(l.soc||'')+(l.spe?' · '+l.spe:'')+(l.contact?' · '+l.contact:'');
-  const p=calcProba(l),pc=probaColor(p);
-  const liLink=l.linkedin?`<a class="li-btn" href="${liUrl(l.linkedin)}" target="_blank"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>Voir LinkedIn</a>`:'';
-  document.getElementById('fiche-badges').innerHTML=`<span class="badge b-${l.type}">${l.type==='cible'?'Cible directe':'Relais'}</span><span class="badge ${STATUS_CLASS[l.statut]||'st-new'}">${l.statut}</span>${l.spe?`<span class="badge" style="background:var(--bg4);color:var(--w3);border:0.5px solid rgba(255,255,255,0.08)">${l.spe}</span>`:''}${liLink}${l.notes?`<span style="font-size:10px;color:var(--w3);font-style:italic;margin-left:4px">${l.notes}</span>`:''}`;
-  document.getElementById('btn-promote').style.display=l.type==='relais'?'block':'none';
-  document.getElementById('btn-enrich').disabled=false;
-  document.getElementById('enrich-btn-txt').textContent=l.enrichedLinks&&l.enrichedLinks.length?'↺ Ré-analyser':'✦ Trouver des connexions';
-  renderEnrichedList(l);renderArbre(l);renderProba(l,p,pc);
-  document.getElementById('fiche-overlay').classList.add('open');
-}
-function closeFiche(){document.getElementById('fiche-overlay').classList.remove('open');ficheId=null;hideTooltip();}
-function setArbreFilter(f){arbreFilter=f;['all','pro','perso'].forEach(x=>{const b=document.getElementById('fbtn-'+x);b.className='filter-btn';if(x===f) b.classList.add(f==='all'?'active-all':f==='pro'?'active-pro':'active-perso');});const l=leads.find(x=>x.id===ficheId);if(l) renderArbre(l);}
-
-function renderArbre(lead){
-  const svg=document.getElementById('arbre-svg'),wrap=document.getElementById('arbre-svg-wrap');
-  const W=wrap.offsetWidth||660,H=280;
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
-  const allLinks=[...(lead.links||[]),...((lead.enrichedLinks||[]).filter(el=>el.added).map(el=>({id:'e'+el.nom,nom:el.nom,role:el.role,type:'pro',force:el.force||'moyen',senio:el.senio||'senior',fromAI:true})))];
-  const links=allLinks.filter(l=>arbreFilter==='all'||l.type===arbreFilter);
-  const cx=W/2,cy=H/2,radius=links.length<=3?95:links.length<=6?112:links.length<=9?124:135;
-  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-  const marker=document.createElementNS('http://www.w3.org/2000/svg','marker');
-  marker.setAttribute('id','arr');marker.setAttribute('markerWidth','6');marker.setAttribute('markerHeight','6');marker.setAttribute('refX','5');marker.setAttribute('refY','3');marker.setAttribute('orient','auto');
-  const mp=document.createElementNS('http://www.w3.org/2000/svg','path');mp.setAttribute('d','M0,0 L0,6 L6,3 z');mp.setAttribute('fill','rgba(201,169,110,0.3)');marker.appendChild(mp);defs.appendChild(marker);svg.appendChild(defs);
-  if(!links.length){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',cx);t.setAttribute('y',cy+4);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5a5550');t.setAttribute('font-size','12');t.setAttribute('font-family','Jost,sans-serif');t.textContent='Aucune connexion — ajoutez un lien ci-dessous';svg.appendChild(t);}
-  links.forEach((link,i)=>{
-    const angle=(2*Math.PI*i/links.length)-(Math.PI/2),x=cx+radius*Math.cos(angle),y=cy+radius*Math.sin(angle);
-    const lc=link.type==='perso'?'rgba(155,127,194,0.45)':link.fromAI?'rgba(201,169,110,0.4)':'rgba(74,168,154,0.4)';
-    const sw=link.force==='fort'?1.5:link.force==='moyen'?1:0.5;
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',cx);line.setAttribute('y1',cy);line.setAttribute('x2',x);line.setAttribute('y2',y);line.setAttribute('stroke',lc);line.setAttribute('stroke-width',sw);line.setAttribute('marker-end','url(#arr)');
-    if(link.force==='faible') line.setAttribute('stroke-dasharray','4 3');svg.appendChild(line);
-    const r=link.force==='fort'?20:link.force==='moyen'?17:14;
-    const nc=link.fromAI?'rgba(201,169,110,0.15)':link.type==='perso'?'rgba(155,127,194,0.2)':'rgba(74,168,154,0.15)';
-    const sc=link.fromAI?'rgba(201,169,110,0.5)':link.type==='perso'?'rgba(155,127,194,0.55)':'rgba(74,168,154,0.55)';
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.style.cursor='pointer';
-    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',x);circle.setAttribute('cy',y);circle.setAttribute('r',r);circle.setAttribute('fill',nc);circle.setAttribute('stroke',sc);circle.setAttribute('stroke-width','0.8');
-    const initials=link.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ').map(p=>p[0]||'').join('').toUpperCase().slice(0,2);
-    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');txt.setAttribute('x',x);txt.setAttribute('y',y+3);txt.setAttribute('text-anchor','middle');txt.setAttribute('fill',link.fromAI?'#c9a96e':link.type==='perso'?'#c49fd8':'#4aa89a');txt.setAttribute('font-size','8');txt.setAttribute('font-family','Jost,sans-serif');txt.setAttribute('font-weight','500');txt.textContent=initials;
-    const lparts=link.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ');
-    const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');lbl.setAttribute('x',x);lbl.setAttribute('y',y>cy?y+r+13:y-r-5);lbl.setAttribute('text-anchor','middle');lbl.setAttribute('fill','#a09a90');lbl.setAttribute('font-size','9');lbl.setAttribute('font-family','Jost,sans-serif');lbl.textContent=lparts[lparts.length-1];
-    g.appendChild(circle);g.appendChild(txt);g.appendChild(lbl);
-    g.addEventListener('mouseenter',e=>showTooltip(e,link,x,y,W));g.addEventListener('mouseleave',hideTooltip);svg.appendChild(g);
-  });
-  const cg=document.createElementNS('http://www.w3.org/2000/svg','g');
-  const cc=document.createElementNS('http://www.w3.org/2000/svg','circle');cc.setAttribute('cx',cx);cc.setAttribute('cy',cy);cc.setAttribute('r','28');cc.setAttribute('fill','#1a1a1d');cc.setAttribute('stroke','rgba(201,169,110,0.6)');cc.setAttribute('stroke-width','1');
-  const ct=document.createElementNS('http://www.w3.org/2000/svg','text');ct.setAttribute('x',cx);ct.setAttribute('y',cy-3);ct.setAttribute('text-anchor','middle');ct.setAttribute('fill','#f0ede8');ct.setAttribute('font-size','9');ct.setAttribute('font-family','Jost,sans-serif');ct.setAttribute('font-weight','500');ct.textContent=lead.nom.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ')[0];
-  const ct2=document.createElementNS('http://www.w3.org/2000/svg','text');ct2.setAttribute('x',cx);ct2.setAttribute('y',cy+9);ct2.setAttribute('text-anchor','middle');ct2.setAttribute('fill','#c9a96e');ct2.setAttribute('font-size','7');ct2.setAttribute('font-family','Jost,sans-serif');ct2.textContent=lead.spe||'';
-  cg.appendChild(cc);cg.appendChild(ct);cg.appendChild(ct2);svg.appendChild(cg);
-}
-
-function showTooltip(e,link,nx,ny,W){
-  tooltipNode=link;const tt=document.getElementById('node-tooltip');
-  const svgRect=document.getElementById('arbre-svg').getBoundingClientRect();
-  const scaleX=svgRect.width/(W||660),scaleY=svgRect.height/280;
-  let tx=nx*scaleX+16,ty=ny*scaleY-20;
-  if(tx+245>svgRect.width) tx=nx*scaleX-255;if(ty<0) ty=ny*scaleY+32;
-  tt.style.left=tx+'px';tt.style.top=ty+'px';
-  document.getElementById('nt-name').textContent=link.nom;document.getElementById('nt-role').textContent=link.role||'';
-  const tc=link.fromAI?'color:var(--gold)':link.type==='perso'?'color:var(--purple)':'color:var(--teal)';
-  const tl=link.fromAI?'Suggéré par IA':link.type==='perso'?'Lien personnel':'Lien professionnel';
-  document.getElementById('nt-link-type').innerHTML=`<span style="${tc};font-size:9px;letter-spacing:0.1em;text-transform:uppercase">${tl}</span> · <span style="color:var(--w3)">${link.force||'moyen'} · ${link.senio||'senior'}</span>`;
-  const contrib=Math.round((FORCE_W[link.force]||0.6)*(TYPE_W[link.type]||1)*(SENIO_W[link.senio]||1)*30);
-  document.getElementById('nt-proba').textContent='+'+contrib+' pts de probabilité';
-  document.getElementById('nt-promote-btn').style.display=leads.find(x=>x.nom.toLowerCase()===link.nom.toLowerCase())?'none':'block';
-  tt.style.display='block';
-}
-function hideTooltip(){document.getElementById('node-tooltip').style.display='none';tooltipNode=null;}
-
-function promoteNodeToLead(){
-  if(!tooltipNode||!ficheId) return;
-  const src=leads.find(x=>x.id===ficheId);
-  leads.push({id:Date.now().toString(),type:'relais',nom:tooltipNode.nom,soc:'',spe:src?src.spe:'',statut:'New',contact:'',linkedin:'',notes:'Lien via '+(src?src.nom:''),links:[],linkedTo:ficheId});
-  saveLeads();hideTooltip();render();
-}
-
-function renderEnrichedList(lead){
-  const el=document.getElementById('enriched-list');
-  if(!lead.enrichedLinks||!lead.enrichedLinks.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="enriched-links">'+lead.enrichedLinks.map((ec,i)=>`
+function renderEnrichedProspectsList(c){
+  const el=document.getElementById('enriched-prospects-list');
+  if(!c.enrichedProspects||!c.enrichedProspects.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="enriched-links">'+c.enrichedProspects.map((ep,i)=>`
     <div class="enriched-link-card">
       <div class="elc-left">
-        <div class="elc-name">${ec.nom}</div>
-        <div class="elc-role">${ec.role||''}</div>
-        <div class="elc-meta">${ec.type_lien||''} · ${ec.force||'moyen'} · ${ec.senio||'senior'}</div>
-        <div class="elc-raison">${ec.raison||''}</div>
+        <div class="elc-name">${ep.nom}</div>
+        <div class="elc-role">${ep.role||''}</div>
+        <div class="elc-meta">${ep.spe||''} · Intro ${ep.force||'moyen'}</div>
+        <div class="elc-raison">${ep.raison||''}</div>
       </div>
-      <button class="btn-add-enriched ${ec.added?'added':''}" onclick="addEnrichedLink(${i})" ${ec.added?'disabled':''}>
-        ${ec.added?'✓ Ajouté':'+ Ajouter'}
+      <button class="btn-add-enriched ${ep.added?'added':''}" onclick="addEnrichedProspect(${i})" ${ep.added?'disabled':''}>
+        ${ep.added?'✓ Ajouté':'+ Ajouter'}
       </button>
     </div>`).join('')+'</div>';
 }
 
-function addEnrichedLink(idx){
-  const l=leads.find(x=>x.id===ficheId);if(!l||!l.enrichedLinks) return;
-  const ec=l.enrichedLinks[idx];ec.added=true;
-  if(!l.links) l.links=[];
-  l.links.push({id:'e'+Date.now(),nom:ec.nom,role:ec.role,type:'pro',force:ec.force||'moyen',senio:ec.senio||'senior',fromAI:true});
-  saveLeads();openFiche(ficheId);render();
+function addEnrichedProspect(idx){
+  const c=contacts.find(x=>x.id===ficheContactId);if(!c||!c.enrichedProspects)return;
+  const ep=c.enrichedProspects[idx];ep.added=true;
+  const newP={id:Date.now().toString(),nom:ep.nom,soc:ep.soc||'',spe:ep.spe||'Autre',statut:'New',contact:'',linkedin:ep.linkedin||'',notes:'Suggéré par IA via '+c.nom};
+  prospects.unshift(newP);
+  if(!c.prospectLinks)c.prospectLinks=[];
+  c.prospectLinks.push({prospectId:newP.id,force:ep.force||'moyen'});
+  saveData();renderEnrichedProspectsList(c);renderFicheContactProspects(c);renderArbreContact(c);renderProspects();
 }
 
-async function enrichConnexions(){
-  const l=leads.find(x=>x.id===ficheId);if(!l) return;
-  showGlobalLoading();
-  document.getElementById('btn-enrich').disabled=true;
-  const steps=['Analyse du profil LinkedIn...','Recherche de connexions sur le web...','Vérification des publications...','Identification des réseaux professionnels...','Génération des suggestions...'];
+async function enrichProspects(){
+  const c=contacts.find(x=>x.id===ficheContactId);if(!c)return;
+  showGlobalLoading();document.getElementById('btn-enrich-c').disabled=true;
+  const steps=['Analyse du profil LinkedIn...','Recherche de connexions sur le web...','Identification des profils médicaux...','Évaluation des liens probables...','Génération des suggestions...'];
   let si=0;setGlobalStep(steps[0]);
   const itv=setInterval(()=>{si=(si+1)%steps.length;setGlobalStep(steps[si]);},2000);
   try{
     const response=await fetch('/api/enrich',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({nom:l.nom,spe:l.spe,soc:l.soc,linkedin:l.linkedin?liUrl(l.linkedin):''})
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nom:c.nom,spe:c.role,soc:'',linkedin:c.linkedin?liUrl(c.linkedin):'',mode:'prospects'})
     });
     const data=await response.json();
     clearInterval(itv);
-    if(data.error) throw new Error(data.error);
-    l.enrichedLinks=data.connexions.map(e=>({...e,added:false}));
-    saveLeads();hideGlobalLoading();
-    document.getElementById('btn-enrich').disabled=false;
-    document.getElementById('enrich-btn-txt').textContent='↺ Ré-analyser';
-    openFiche(ficheId);
+    if(data.error)throw new Error(data.error);
+    c.enrichedProspects=(data.connexions||[]).map(e=>({...e,added:false}));
+    saveData();hideGlobalLoading();document.getElementById('btn-enrich-c').disabled=false;
+    document.getElementById('enrich-c-txt').textContent='↺ Ré-analyser';
+    renderEnrichedProspectsList(c);
   }catch(err){
-    clearInterval(itv);hideGlobalLoading();
-    document.getElementById('btn-enrich').disabled=false;
+    clearInterval(itv);hideGlobalLoading();document.getElementById('btn-enrich-c').disabled=false;
+    const isCredit=err.message&&(err.message.includes('rate limit')||err.message.includes('credit')||err.message.includes('billing')||err.message.includes('tier'));
     const errDiv=document.createElement('div');
-    errDiv.style.cssText='margin-top:8px;font-size:11px;color:#e08080;padding:8px 0';
-    errDiv.textContent='Erreur : '+(err.message||'Réessaie dans un instant.');
-    document.getElementById('enriched-list').prepend(errDiv);
-    setTimeout(()=>errDiv.remove(),7000);
+    errDiv.style.cssText='margin-top:8px;font-size:11px;color:#e08080;padding:10px 12px;background:rgba(184,92,92,0.08);border:0.5px solid rgba(184,92,92,0.28);border-radius:3px;line-height:1.6';
+    errDiv.innerHTML=isCredit?'<strong style="color:#e08080">Crédit API épuisé.</strong><br>Contacter <a href="mailto:louis.ballorin@edhec.com" style="color:var(--teal)">louis.ballorin@edhec.com</a> pour recharger.':`Erreur : ${err.message||'Réessaie dans un instant.'}`;
+    document.getElementById('enriched-prospects-list').prepend(errDiv);
+    setTimeout(()=>errDiv.remove(),10000);
   }
 }
 
-function renderProba(lead,p,pc){
-  document.getElementById('proba-score').textContent=p>0?p+'%':'—';document.getElementById('proba-score').style.color=p>0?pc:'var(--w3)';
-  const links=lead.links||[];
-  const perso=links.filter(l=>l.type==='perso'),pro=links.filter(l=>l.type==='pro'),forts=links.filter(l=>l.force==='fort'),partners=links.filter(l=>l.senio==='partner');
-  const factors=[];
-  if(perso.length) factors.push({label:`${perso.length} lien${perso.length>1?'s':''} perso`,val:Math.min(100,perso.length*35),color:'var(--purple)'});
-  if(pro.length) factors.push({label:`${pro.length} lien${pro.length>1?'s':''} pro`,val:Math.min(100,pro.length*25),color:'var(--teal)'});
-  if(forts.length) factors.push({label:`${forts.length} lien${forts.length>1?'s':''} fort${forts.length>1?'s':''}`,val:Math.min(100,forts.length*40),color:'var(--gold)'});
-  if(partners.length) factors.push({label:`${partners.length} partner / directeur`,val:Math.min(100,partners.length*45),color:'#6ec98a'});
-  if(!links.length) factors.push({label:'Aucune connexion — ajoutez des liens',val:0,color:'var(--w3)'});
-  document.getElementById('proba-factors').innerHTML=factors.map(f=>`<div class="pf-row"><span style="width:185px;flex-shrink:0">${f.label}</span><div class="pf-bar"><div class="pf-fill" style="width:${f.val}%;background:${f.color}"></div></div><span style="min-width:34px;text-align:right;color:${f.color}">${f.val}%</span></div>`).join('');
-}
+function toggleInfoC(){const p=document.getElementById('info-popup-c');p.style.display=p.style.display==='none'?'block':'none';}
+document.addEventListener('click',e=>{const p=document.getElementById('info-popup-c');if(p&&!e.target.closest('#info-popup-c')&&!e.target.closest('button[onclick*="toggleInfoC"]'))p.style.display='none';});
 
-function addLink(){
-  const nom=document.getElementById('nl-nom').value.trim();if(!nom) return;
-  const l=leads.find(x=>x.id===ficheId);if(!l) return;
-  if(!l.links) l.links=[];
-  l.links.push({id:'l'+Date.now(),nom,role:document.getElementById('nl-role').value.trim(),type:document.getElementById('nl-type').value,force:document.getElementById('nl-force').value,senio:document.getElementById('nl-senio').value});
-  document.getElementById('nl-nom').value='';document.getElementById('nl-role').value='';
-  saveLeads();openFiche(ficheId);render();
-}
-
-function editLead(){
-  const l=leads.find(x=>x.id===ficheId);if(!l) return;editId=ficheId;closeFiche();
-  setTimeout(()=>{
-    document.getElementById('m-nom').value=l.nom;document.getElementById('m-soc').value=l.soc||'';
-    document.getElementById('m-spe').value=l.spe||'Cardiologie';document.getElementById('m-statut').value=l.statut||'New';
-    document.getElementById('m-contact').value=l.contact||'';document.getElementById('m-linkedin').value=l.linkedin||'';
-    document.getElementById('m-notes').value=l.notes||'';
-    document.getElementById('modal-title').innerHTML='Modifier le <em>lead</em>';
-    document.getElementById('modal-overlay').classList.add('open');
-  },150);
-}
-function promoteToLead(){const l=leads.find(x=>x.id===ficheId);if(!l) return;l.type='cible';saveLeads();closeFiche();render();}
-function openNewLead(){
-  editId=null;['m-nom','m-soc','m-contact','m-linkedin','m-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('m-spe').value='Cardiologie';document.getElementById('m-statut').value='New';
-  document.getElementById('modal-title').innerHTML='Nouveau <em>lead</em>';
+function openModal(mode,data=null){
+  modalMode=mode;editId=data?data.id:null;
+  document.getElementById('modal-title').innerHTML=`${data?'Modifier':'Nouveau'} <em>${mode==='contact'?'contact':'prospect'}</em>`;
+  const fields=document.getElementById('modal-fields');
+  const liLogo='<svg style="position:absolute;left:10px;width:14px;height:14px;opacity:0.6;pointer-events:none" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
+  if(mode==='contact'){
+    fields.innerHTML=`
+      <div class="field"><label>Nom complet</label><input id="mf-nom" type="text" placeholder="Pierre Rochat" value="${data?data.nom:''}"></div>
+      <div class="field"><label>Rôle / Société</label><input id="mf-role" type="text" placeholder="Orthopédiste retraité, HUG" value="${data?data.role||'':''}"></div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Séniorité</label>
+          <select id="mf-senio" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27%23c9a96e%27 stroke-width=%271.2%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer">
+            <option value="partner" ${data&&data.senio==='partner'?'selected':''}>Partner / Dir.</option>
+            <option value="senior" ${!data||data.senio==='senior'?'selected':''}>Senior</option>
+            <option value="junior" ${data&&data.senio==='junior'?'selected':''}>Junior</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1"><label>Force du lien GFI</label>
+          <select id="mf-lien" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27%23c9a96e%27 stroke-width=%271.2%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer">
+            <option value="fort" ${data&&data.lien==='fort'?'selected':''}>Fort</option>
+            <option value="moyen" ${!data||data.lien==='moyen'?'selected':''}>Moyen</option>
+            <option value="faible" ${data&&data.lien==='faible'?'selected':''}>Faible</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Contact</label><input id="mf-contact" type="text" placeholder="p.rochat@email.ch" value="${data?data.contact||'':''}"></div>
+      <div class="field"><label>LinkedIn</label><div class="li-wrap">${liLogo}<input id="mf-linkedin" type="text" placeholder="linkedin.com/in/..." value="${data?data.linkedin||'':''}"></div><div class="field-hint">URL ou nom d'utilisateur</div></div>
+      <div class="field"><label>Notes</label><input id="mf-notes" type="text" placeholder="..." value="${data?data.notes||'':''}"></div>
+    `;
+  } else {
+    const spes=['Cardiologie','Chirurgie','Dermatologie','Gynécologie','Neurologie','Oncologie','Ophtalmologie','Orthopédie','Pédiatrie','Psychiatrie','Radiologie','Urologie','Autre'];
+    fields.innerHTML=`
+      <div class="field"><label>Nom complet</label><input id="mf-nom" type="text" placeholder="Dr. Claire Tissot" value="${data?data.nom:''}"></div>
+      <div class="field"><label>Cabinet / Clinique</label><input id="mf-soc" type="text" placeholder="Clinique La Colline" value="${data?data.soc||'':''}"></div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Spécialité</label>
+          <select id="mf-spe" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27%23c9a96e%27 stroke-width=%271.2%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer">${spes.map(s=>`<option ${data&&data.spe===s?'selected':''}>${s}</option>`).join('')}</select>
+        </div>
+        <div class="field" style="flex:1"><label>Statut</label>
+          <select id="mf-statut" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27 fill=%27none%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 stroke=%27%23c9a96e%27 stroke-width=%271.2%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer">${['New','Contacted','Qualified','Proposal','Won','Lost'].map(s=>`<option value="${s}" ${data&&data.statut===s?'selected':''}>${s}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="field"><label>Contact</label><input id="mf-contact" type="text" placeholder="c.tissot@clinique.ch" value="${data?data.contact||'':''}"></div>
+      <div class="field"><label>LinkedIn</label><div class="li-wrap">${liLogo}<input id="mf-linkedin" type="text" placeholder="linkedin.com/in/..." value="${data?data.linkedin||'':''}"></div><div class="field-hint">URL ou nom d'utilisateur</div></div>
+      <div class="field"><label>Notes</label><input id="mf-notes" type="text" placeholder="..." value="${data?data.notes||'':''}"></div>
+    `;
+  }
   document.getElementById('modal-overlay').classList.add('open');
 }
-function closeNewLead(){document.getElementById('modal-overlay').classList.remove('open');editId=null;}
-function saveNewLead(){
-  const nom=document.getElementById('m-nom').value.trim();if(!nom) return;
-  const linkedin=document.getElementById('m-linkedin').value.trim();
-  if(editId){const i=leads.findIndex(x=>x.id===editId);if(i>-1) leads[i]={...leads[i],nom,soc:document.getElementById('m-soc').value.trim(),spe:document.getElementById('m-spe').value,statut:document.getElementById('m-statut').value,contact:document.getElementById('m-contact').value.trim(),linkedin,notes:document.getElementById('m-notes').value.trim()};}
-  else leads.unshift({id:Date.now().toString(),type:'cible',nom,soc:document.getElementById('m-soc').value.trim(),spe:document.getElementById('m-spe').value,statut:document.getElementById('m-statut').value,contact:document.getElementById('m-contact').value.trim(),linkedin,notes:document.getElementById('m-notes').value.trim(),links:[]});
-  saveLeads();closeNewLead();render();
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');modalMode=null;editId=null;}
+function saveModal(){
+  const nom=document.getElementById('mf-nom').value.trim();if(!nom)return;
+  if(modalMode==='contact'){
+    const obj={id:editId||Date.now().toString(),nom,role:document.getElementById('mf-role').value.trim(),senio:document.getElementById('mf-senio').value,lien:document.getElementById('mf-lien').value,contact:document.getElementById('mf-contact').value.trim(),linkedin:document.getElementById('mf-linkedin').value.trim(),notes:document.getElementById('mf-notes').value.trim(),prospectLinks:[]};
+    if(editId){const i=contacts.findIndex(x=>x.id===editId);if(i>-1){obj.prospectLinks=contacts[i].prospectLinks||[];obj.enrichedProspects=contacts[i].enrichedProspects;contacts[i]=obj;}}else contacts.unshift(obj);
+    saveData();closeModal();renderContacts();
+  } else {
+    const obj={id:editId||Date.now().toString(),nom,soc:document.getElementById('mf-soc').value.trim(),spe:document.getElementById('mf-spe').value,statut:document.getElementById('mf-statut').value,contact:document.getElementById('mf-contact').value.trim(),linkedin:document.getElementById('mf-linkedin').value.trim(),notes:document.getElementById('mf-notes').value.trim()};
+    if(editId){const i=prospects.findIndex(x=>x.id===editId);if(i>-1)prospects[i]=obj;}else prospects.unshift(obj);
+    saveData();closeModal();renderProspects();
+  }
 }
-function deleteLead(id){leads=leads.filter(l=>l.id!==id);saveLeads();render();}
-document.getElementById('fiche-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('fiche-overlay')) closeFiche();});
-document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('modal-overlay')) closeNewLead();});
-document.querySelector('th[data-col="proba"]').classList.add('sort-active');
-loadLeads();render();
+function editContact(){const c=contacts.find(x=>x.id===ficheContactId);if(!c)return;closeFicheContact();setTimeout(()=>openModal('contact',c),150);}
+function editProspect(){const p=prospects.find(x=>x.id===ficheProspectId);if(!p)return;closeFicheProspect();setTimeout(()=>openModal('prospect',p),150);}
+function deleteContact(id){contacts=contacts.filter(x=>x.id!==id);saveData();renderContacts();}
+
+document.getElementById('fiche-contact-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('fiche-contact-overlay'))closeFicheContact();});
+document.getElementById('fiche-prospect-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('fiche-prospect-overlay'))closeFicheProspect();});
+document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('modal-overlay'))closeModal();});
+
+loadData();renderContacts();renderProspects();
 </script>
 </body>
 </html>
